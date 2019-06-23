@@ -2,7 +2,7 @@
 
 <main>
     <div class="container">
-        <?php if ($user['role']) : ?>
+        <?php if (getUser()['role']) : ?>
         <?php ?>
             Hello
         <?php else: ?>
@@ -27,7 +27,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Huisdier registreren</h5>
                     <p class="card-text">
-                        Nog een huisdier toevoegen?<br>
+                        Een huisdier toevoegen?<br>
                         Klik op de onderstaande knop
                     </p>
                     <button  data-toggle="modal" data-target="#registerPet" class="btn btn-outline-success">Huisdier registreren</button>
