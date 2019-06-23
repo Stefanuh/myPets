@@ -1,0 +1,26 @@
+main {
+  padding: 32px 0;
+}
+
+input {
+  margin: 10px 0;
+}
+
+button {
+  outline: none !important;
+}
+
+.input-group-text {
+  width: 40px;
+}
+
+.navbar-brand img {
+  width: 24px;
+  margin-right: 10px;
+}
+
+.hasDatepicker {
+  cursor: default;
+}
+
+/*# sourceMappingURL=general.css.map */

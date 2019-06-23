@@ -1,0 +1,17 @@
+@media only screen and (max-width: 727px) {
+  main {
+    padding: 20px 0;
+  }
+
+  .card {
+    margin-bottom: 15px;
+  }
+}
+@media only screen and (min-width: 992px) {
+  .navbar-expand-lg .navbar-nav .nav-link {
+    padding-right: 2rem;
+    padding-left: 2rem;
+  }
+}
+
+/*# sourceMappingURL=media.css.map */
