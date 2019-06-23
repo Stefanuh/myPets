@@ -61,4 +61,3 @@ if (isset($_SESSION['userID'])) {
     );
     $user = getQuery("SELECT * FROM user WHERE userID = :userID", $bind)[0];
 }
-
