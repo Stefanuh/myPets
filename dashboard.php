@@ -13,7 +13,7 @@
             <?php foreach (getPets() as $pet) : ?>
 
                 <div class="card" style="width: 18rem;">
-                    <div class="card-img-top" style="background-image: url('img/pets/1.jpg')"></div>
+                    <div class="card-img-top" style="background-image: url('<?php echo getPetPicture($pet['petID']) ?>')"></div>
                     <div class="card-body">
                         <h5 class="card-title"><?php echo $pet['name'] ?></h5>
                         <p class="card-text">
@@ -55,7 +55,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method>
+                    <form method="POST" action="php/addPet">
                         <div class="form-group">
                             <label for="name">Naam</label>
                             <input type="text" name="name" class="form-control" id="name" placeholder="Geef de naam van uw huisdier" required>
@@ -75,7 +75,7 @@
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuleren</button>
-                            <button type="submit" class="btn btn-success">Registreer</button>
+                            <button type="submit" name="addPet" class="btn btn-success">Registreer</button>
                         </div>
 
                     </form>

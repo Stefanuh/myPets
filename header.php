@@ -18,9 +18,6 @@
                             <li class="nav-item <?php if ($menu_item['slug'] == getPageSlug()) echo "active" ?>">
                                 <a class="nav-link" href="/<?php echo $menu_item['slug'] ?>"><?php echo $menu_item['name']  ?> <?php if ($menu_item['slug'] == getPageSlug()) echo "<span class=\"sr-only\">(current)</span>" ?></a>
                             </li>
-
-<!--                        --><?php //print_r($menu_item['slug']) ?>
-<!--                        --><?php //print_r(getPageSlug()); ?>
                     <?php endforeach; ?>
             </ul>
         </div>
