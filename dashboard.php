@@ -6,21 +6,26 @@
         <?php ?>
             Hello
         <?php else: ?>
-
-
         <div class="row justify-content-center align-items-center">
-            <div class="card" style="width: 18rem;">
-                <div class="card-img-top" style="background-image: url('img/pets/1.jpg')"></div>
-                <div class="card-body">
-                    <h5 class="card-title">Sky</h5>
-                    <p class="card-text">
-                        <span class="badge badge-info">Australische herder</span> <br>
-                        <span class="badge badge-secondary">12 maanden</span>
-                    </p>
-                    <a href="#" class="btn btn-outline-primary">Gegevens</a>
-                    <a href="#" class="btn btn-outline-danger">Afspraken</a>
+
+
+
+            <?php foreach (getPets() as $pet) : ?>
+
+                <div class="card" style="width: 18rem;">
+                    <div class="card-img-top" style="background-image: url('img/pets/1.jpg')"></div>
+                    <div class="card-body">
+                        <h5 class="card-title"><?php echo $pet['name'] ?></h5>
+                        <p class="card-text">
+                            <span class="badge badge-info"><?php echo getBreedByID($pet['breedID'])['name'] ?></span> <br>
+                            <span class="badge badge-secondary"><?php $date = date_create($pet['birth']); echo date_format($date, "j M Y") ?></span>
+                        </p>
+                        <a href="#" class="btn btn-outline-primary">Gegevens</a>
+                        <a href="#" class="btn btn-outline-danger">Afspraken</a>
+                    </div>
                 </div>
-            </div>
+
+            <?php endforeach; ?>
 
             <div class="card" style="width: 18rem;">
                 <div class="card-img-top" style="background-image: url('img/pets.jpg')"></div>
@@ -50,14 +55,14 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form method>
                         <div class="form-group">
                             <label for="name">Naam</label>
-                            <input type="email" class="form-control" id="name" placeholder="Geef de naam van uw huisdier">
+                            <input type="text" name="name" class="form-control" id="name" placeholder="Geef de naam van uw huisdier" required>
                         </div>
                         <div class="form-group">
-                            <label for="birth">Ras</label>
-                            <select name="breeds" class="select" id="birth" class="form-control">
+                            <label for="breed">Ras</label>
+                            <select name="breed" class="select" id="breed" class="form-control" required>
                                 <?php foreach (getQuery("SELECT * FROM breed") as $breed) : ?>
                                     <option value="<?php echo $breed['breedID'] ?>"><?php echo $breed['name'] ?></option>
                                 <?php endforeach; ?>
@@ -65,7 +70,7 @@
                         </div>
                         <div class="form-group">
                             <label for="datepicker">Geboortedatum</label>
-                            <input type="text" class=" form-control" name="birth" id="datepicker" placeholder="Geef uw huidier een naam" value="<?php echo date('Y-m-d') ?>">
+                            <input type="text" class="form-control" name="birth" id="datepicker" placeholder="Geef uw huidier een naam" value="<?php echo date('Y-m-d') ?>" required>
                         </div>
 
                         <div class="modal-footer">

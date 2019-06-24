@@ -10,6 +10,10 @@ button {
   outline: none !important;
 }
 
+label {
+  display: none;
+}
+
 .input-group-text {
   width: 40px;
 }
@@ -72,6 +76,10 @@ button {
 
 button[type=submit] {
   margin-bottom: 0 !important;
+}
+
+.alert {
+  padding: 5px 10px;
 }
 
 @media only screen and (max-width: 727px) {

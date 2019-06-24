@@ -49,4 +49,8 @@ button[type=submit] {
   margin-bottom: 0 !important;
 }
 
+.alert {
+  padding: 5px 10px;
+}
+
 /*# sourceMappingURL=changes.css.map */

@@ -18,19 +18,39 @@ function getMenu($secured = 0){
     return getQuery("SELECT * FROM menu WHERE secured = ".$secured);
 }
 
+function getPageSlug() {
+    return explode("?", str_replace("/", "", $_SERVER['REQUEST_URI']))[0];
+}
+
 function getUser(){
     if (isset($_SESSION['userID'])) {
-        $bind = array( 1 => array(
-            "key" => "userID",
-            "value" => $_SESSION['userID']
-        )
+        $bind = array(
+            1 => array(
+                "key" => "userID",
+                "value" => $_SESSION['userID']
+            )
         );
-        return getQuery("SELECT * FROM user WHERE userID = :userID", $bind)[0];
+        return getQuery("SELECT firstName, lastName, email, role FROM user WHERE userID = :userID", $bind)[0];
     }
 }
 
-function getPageSlug() {
-    return basename(preg_replace("/(.+)\.php$/", "$1", basename(__FILE__)));
+function getPets(){
+    $bind = array(
+        1 => array(
+            "key" => "userID",
+            "value" => $_SESSION['userID']
+        )
+    );
+    return getQuery("SELECT * FROM pet WHERE userID = :userID", $bind);
 }
 
-print_r($_SERVER['REQUEST_URI']);
+function getBreedByID($bindValue){
+    $bind = array(
+        1 => array(
+            "key" => "breedID",
+            "value" => $bindValue
+        )
+    );
+
+    return getQuery("SELECT * FROM breed", $bind)[0];
+}
