@@ -1,6 +1,5 @@
 <?php
 
-
 // Start a session, make a connection and set defines
 session_start();
 define("root", "https://stefanjovanovic.nl");
@@ -58,7 +57,7 @@ function getBreedByID($bindValue){
             "value" => $bindValue
         )
     );
-    return getQuery("SELECT * FROM breed", $bind)[0];
+    return getQuery("SELECT * FROM breed WHERE breedID = :breedID", $bind)[0];
 }
 
 // Check if user is premited to enter page

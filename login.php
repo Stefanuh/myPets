@@ -18,8 +18,8 @@
                             <div class="form">
                                 <div id="message">
                                 </div>
-                                <label for="email"></label><input type="email"  id="email" class="form-control" placeholder="Emailadres" required>
-                                <label for="password"></label><input type="password"  id="password" class="form-control" placeholder="Wachtwoord" required>
+                                <input type="email"  id="email" class="form-control" placeholder="Emailadres" required>
+                                </label><input type="password"  id="password" class="form-control" placeholder="Wachtwoord" required>
                                 <button type="submit" id="submitLogin" class="btn btn-primary">Log in</button>
                             </div>
 
@@ -47,7 +47,7 @@
         password: document.getElementById('password'),
         message: document.getElementById('message'),
         submit: document.getElementById('submitLogin'),
-    }
+    };
 
     form.submit.addEventListener('click', () => {
        const request = new XMLHttpRequest();

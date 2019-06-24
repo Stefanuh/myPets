@@ -1,5 +1,11 @@
+header {
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+}
+
 main {
-  padding: 32px 0;
+  padding: 75px 0 25px 0;
 }
 
 input {
@@ -8,10 +14,6 @@ input {
 
 button {
   outline: none !important;
-}
-
-label {
-  display: none;
 }
 
 .input-group-text {
@@ -39,7 +41,7 @@ label {
 }
 
 .card {
-  margin: 0 5px;
+  margin: 0 5px 10px 5px;
 }
 .card .card-img-top {
   height: 140px;
@@ -82,13 +84,59 @@ button[type=submit] {
   padding: 5px 10px;
 }
 
+.ui-datepicker-header.ui-widget-header.ui-helper-clearfix.ui-corner-all {
+  background: #0068BF;
+  color: white;
+  border: 0 !important;
+  border-radius: 0px;
+}
+
+a.ui-state-default {
+  background: #0068BF !important;
+  color: white !important;
+  padding: 5px !important;
+  text-align: center !important;
+  border: none !important;
+  border-radius: 3px;
+}
+
+td.ui-datepicker-unselectable.ui-state-disabled .ui-state-default {
+  padding: 5px !important;
+  text-align: center !important;
+  border: none !important;
+}
+
+.ui-datepicker-prev-hover, .ui-datepicker-next-hover {
+  background: none !important;
+  border: none !important;
+  cursor: pointer;
+}
+
+.ui-datepicker {
+  padding: 0;
+  margin: 0 !important;
+  border: none !important;
+}
+
+table.ui-datepicker-calendar {
+  margin-bottom: 0;
+}
+
+.custom-file :hover {
+  cursor: pointer;
+}
+.custom-file .custom-file-label::after {
+  content: "Selecteren" !important;
+}
+
 @media only screen and (max-width: 727px) {
   main {
-    padding: 20px 0;
+    padding: 75px 0 20px 0;
   }
 
   .card {
-    margin-bottom: 15px;
+    width: 100% !important;
+    margin: 0 25px 25px !important;
   }
 }
 @media only screen and (min-width: 992px) {

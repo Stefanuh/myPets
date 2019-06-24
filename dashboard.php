@@ -55,7 +55,9 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="php/addPet">
+                    <form id="addPetForm" method="POST" enctype="multipart/form-data">
+                        <div id="message">
+                        </div>
                         <div class="form-group">
                             <label for="name">Naam</label>
                             <input type="text" name="name" class="form-control" id="name" placeholder="Geef de naam van uw huisdier" required>
@@ -70,19 +72,82 @@
                         </div>
                         <div class="form-group">
                             <label for="datepicker">Geboortedatum</label>
-                            <input type="text" class="form-control" name="birth" id="datepicker" placeholder="Geef uw huidier een naam" value="<?php echo date('Y-m-d') ?>" required>
+                            <input type="date" name="birth" class="form-control" id="datepicker" placeholder="Geef de geboortedatum van uw huisdier" value="<?php echo date('Y-m-d') ?>" required>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>Foto</label>
+                            <div class="custom-file">
+                                <input type="file" name="file" class="custom-file-input" id="petPicture" accept="image/*">
+                                <label class="custom-file-label" for="petPicture">Kies een foto (optioneel)</label>
+                            </div>
                         </div>
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuleren</button>
-                            <button type="submit" name="addPet" class="btn btn-success">Registreer</button>
+                            <button type="button" name="addPet" id="submitPet" class="btn btn-success">Registreer</button>
                         </div>
-
                     </form>
+
                 </div>
             </div>
         </div>
     </div>
 
-
 <?php require_once "footer.php" ?>
+
+<script>
+
+    const messages = document.getElementById('message');
+
+
+    $('input[type=file]').change(function(){
+        $in=$(this);
+        $in.next().html($in.val());
+
+    });
+
+    $("#submitPet").click(function (event) {
+        event.preventDefault();
+        const form = $('#addPetForm')[0];
+        const data = new FormData(form);
+        data.append("userID", '<?php echo getUser()["userID"]; ?>');
+
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/php/add_pet.php",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                handleResponse(JSON.parse(data));
+            },
+            error: function (e) {
+                handleResponse(JSON.parse(e));
+            }
+        });
+
+    });
+
+    function handleResponse(responseObject) {
+        if (responseObject.ok) {
+            location.href = 'dashboard';
+        } else {
+            while(messages.firstChild) messages.removeChild(messages.firstChild);
+            responseObject.message.forEach((message) => {
+                const li = document.createElement('div');
+                li.className = 'alert alert-danger';
+                li.textContent = message;
+                messages.appendChild(li);
+            });
+
+            messages.style.display = "block";
+        }
+    }
+
+
+</script>

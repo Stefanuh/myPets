@@ -12,7 +12,7 @@
 }
 
 .card {
-  margin: 0 5px;
+  margin: 0 5px 10px 5px;
   .card-img-top {
     height: 140px;
     background-size: cover;
@@ -53,4 +53,58 @@ button[type="submit"] {
 
 .alert {
   padding: 5px 10px;
+}
+
+.ui-datepicker-header.ui-widget-header.ui-helper-clearfix.ui-corner-all {
+  background: #0068BF;
+  color: white;
+  border: 0 !important ;
+  border-radius: 0px;
+}
+
+
+a.ui-state-default {
+  background: #0068BF !important;
+  color: white !important;
+  padding: 5px !important;
+  text-align: center !important;
+  border: none !important;
+  border-radius: 3px;
+}
+
+td.ui-datepicker-unselectable.ui-state-disabled .ui-state-default {
+  padding: 5px !important;
+  text-align: center !important;
+  border: none !important;
+}
+
+
+.ui-datepicker-prev-hover, .ui-datepicker-next-hover {
+  background: none !important;
+  border: none !important;
+  cursor: pointer;
+}
+
+.ui-datepicker {
+  padding: 0;
+  margin: 0 !important;
+  border: none !important;
+}
+
+
+table.ui-datepicker-calendar {
+  margin-bottom: 0;
+}
+
+
+.custom-file {
+  :hover {
+    cursor: pointer ;
+
+  }
+  .custom-file-label {
+    &::after {
+      content: 'Selecteren' !important;
+    }
+  }
 }

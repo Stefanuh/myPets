@@ -8,9 +8,8 @@ $passwordAttempt = !empty($_POST['password']) ? trim($_POST['password']) : null;
 $message = array();
 $valid = true;
 $ok = false;
+
 $sql = "SELECT userID, email, password FROM user WHERE email = :email";
-
-
 $stmt = $pdo->prepare($sql);
 $stmt->bindValue(':email', $email);
 $stmt->execute();
