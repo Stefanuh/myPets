@@ -29,4 +29,22 @@ button {
   cursor: default;
 }
 
+.btn-link {
+  color: black;
+}
+
+.btn-link:hover {
+  text-decoration: none;
+  color: grey;
+}
+
+.btn-link:focus {
+  font-weight: 500;
+  text-decoration: none;
+}
+
+#dashboard > .container-fluid > .row > .card {
+  margin: 0 5px 10px;
+}
+
 /*# sourceMappingURL=general.css.map */

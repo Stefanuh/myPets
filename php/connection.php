@@ -1,6 +1,5 @@
 <?php
 
-
 $dsn = "mysql:host=localhost;dbname=stefanjovanovic_nl_mypets;charset=utf8mb4";
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,

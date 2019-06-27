@@ -1,27 +1,30 @@
-<?php require_once "head.php"; ?>
+<?php
+    require_once "head.php";
+    $petObj = new Pet();
+?>
 
-<main>
-    <div class="container">
-        <?php if (getUser()['role']) : ?>
-        <?php ?>
-            Hello
+<main id="dashboard">
+    <div class="container-fluid">
+
+        <?php if ($userObj->getRole()) : ?>
+            Hello admin
         <?php else: ?>
         <div class="row justify-content-center align-items-center">
 
-
-
-            <?php foreach (getPets() as $pet) : ?>
+            <?php foreach ($petObj->getUserPets() as $pet) : ?>
 
                 <div class="card" style="width: 18rem;">
-                    <div class="card-img-top" style="background-image: url('<?php echo getPetPicture($pet['petID']) ?>')"></div>
+                    <div class="card-img-top" style="background-image: url('<?php echo $petObj->getPicture($pet['petID'], $pet['breedID']) ?>')"></div>
                     <div class="card-body">
                         <h5 class="card-title"><?php echo $pet['name'] ?></h5>
                         <p class="card-text">
-                            <span class="badge badge-info"><?php echo getBreedByID($pet['breedID'])['name'] ?></span> <br>
+                            <span class="badge badge-info"><?php echo $petObj->getBreedByID($pet['breedID'])['name'] ?></span> <br>
                             <span class="badge badge-secondary"><?php $date = date_create($pet['birth']); echo date_format($date, "j M Y") ?></span>
                         </p>
-                        <a href="#" class="btn btn-outline-primary">Gegevens</a>
-                        <a href="#" class="btn btn-outline-danger">Afspraken</a>
+
+                            <input type="hidden" name="petID" value="<?php echo $pet['petID'] ?>">
+                            <a href="/pet?id=<?php echo $pet['petID'] ?>" class="btn btn-outline-primary appointment">Bekijk <?php echo $pet['name'] ?></a>
+                        </form>
                     </div>
                 </div>
 
@@ -62,24 +65,32 @@
                             <label for="name">Naam</label>
                             <input type="text" name="name" class="form-control" id="name" placeholder="Geef de naam van uw huisdier" required>
                         </div>
+
+                        <div class="form-group">
+                            <label for="breedType">Soort</label>
+                            <select name="breedType" id="breedType" class="form-control" required>
+                                <option value="dog">Hond</option>
+                                <option value="cat">Kat</option>
+                            </select>
+                        </div>
+
                         <div class="form-group">
                             <label for="breed">Ras</label>
-                            <select name="breed" class="select" id="breed" class="form-control" required>
-                                <?php foreach (getQuery("SELECT * FROM breed") as $breed) : ?>
+                            <select name="breed" id="breed" class="form-control select" required>
+                                <?php foreach ($petObj->getBreeds() as $breed) : ?>
                                     <option value="<?php echo $breed['breedID'] ?>"><?php echo $breed['name'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="datepicker">Geboortedatum</label>
-                            <input type="date" name="birth" class="form-control" id="datepicker" placeholder="Geef de geboortedatum van uw huisdier" value="<?php echo date('Y-m-d') ?>" required>
-
+                            <input type="text" name="birth" id="birth" class="form-control datepicker" placeholder="Geef de geboortedatum van uw huisdier" value="<?php echo date('d-m-Y') ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label>Foto</label>
                             <div class="custom-file">
-                                <input type="file" name="file" class="custom-file-input" id="petPicture" accept="image/*">
+                                <input type="file" name="file" class="custom-file-input" id="picture" accept="image/*">
                                 <label class="custom-file-label" for="petPicture">Kies een foto (optioneel)</label>
                             </div>
                         </div>
@@ -89,7 +100,6 @@
                             <button type="button" name="addPet" id="submitPet" class="btn btn-success">Registreer</button>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>
@@ -98,56 +108,101 @@
 <?php require_once "footer.php" ?>
 
 <script>
-
-    const messages = document.getElementById('message');
-
-
-    $('input[type=file]').change(function(){
-        $in=$(this);
-        $in.next().html($in.val());
-
-    });
-
-    $("#submitPet").click(function (event) {
-        event.preventDefault();
-        const form = $('#addPetForm')[0];
-        const data = new FormData(form);
-        data.append("userID", '<?php echo getUser()["userID"]; ?>');
-
-        $.ajax({
-            type: "POST",
-            enctype: 'multipart/form-data',
-            url: "/php/add_pet.php",
-            data: data,
-            processData: false,
-            contentType: false,
-            cache: false,
-            timeout: 600000,
-            success: function (data) {
-                handleResponse(JSON.parse(data));
-            },
-            error: function (e) {
-                handleResponse(JSON.parse(e));
-            }
-        });
-
-    });
-
-    function handleResponse(responseObject) {
-        if (responseObject.ok) {
-            location.href = 'dashboard';
+    $( "#breedType" ).change(function() {
+        if ( $(this).val() === 'cat') {
+            console.log("katje!");
+            $( "#breed" ).load( "php/parts/pet_breeds.php #cat > *" );
         } else {
-            while(messages.firstChild) messages.removeChild(messages.firstChild);
-            responseObject.message.forEach((message) => {
+            $( "#breed" ).load( "php/parts/pet_breeds.php #dog > *" );
+
+        }
+    });
+
+    const form = {
+        messages: document.getElementById('message'),
+        submitPet: document.getElementById('submitPet'),
+        name: document.getElementById('name'),
+        birth: document.getElementById('birth'),
+        breed: document.getElementById('breed'),
+        file: document.getElementById('picture')
+    };
+
+    form.submitPet.addEventListener('click', function (e) {
+        e.preventDefault();
+        // Clear all messages first
+        while (form.messages.firstChild) form.messages.removeChild(form.messages.firstChild);
+
+        let messageList = [];
+        let error = false;
+
+        // Check if name is empty
+        if (form.name.value === "") {
+            messageList.push("Voer aub de naam in van uw huisdier");
+            error = true;
+        }
+
+        // Check if breed is empty
+        if (form.breed.value === "") {
+            messageList.push("Voer aub de ras in van uw huisdier");
+            error = true;
+        }
+
+        // Check if birth is empty
+        if (form.birth.value === "") {
+            messageList.push("Voor aub de geboortedatum in van uw huisdier");
+            error = true;
+        }
+
+        if (form.file.files[0]) {
+            // Check if the image is larger than 5mb
+            if (form.file.files[0].size > 5000000) {
+                messageList.push("De afbeelding is helaas te groot om te uploaden");
+                error = true;
+            }
+            // Check if file has a proper extension
+            if (form.file.files[0].type === "image/jpeg" || form.file.files[0].type === "image/png") {
+            } else {
+                messageList.push("Sorry alléén JPG, JPEG & PNG bestanden zijn toegestaan.");
+                error = true;
+            }
+        }
+
+        // If a check wasn't passed then add error message
+        if (error) {
+            messageList.forEach(function (message) {
                 const li = document.createElement('div');
                 li.className = 'alert alert-danger';
                 li.textContent = message;
-                messages.appendChild(li);
+                form.messages.appendChild(li);
             });
+        } else {
+            const url = '/php/add_pet.php';
+            const formData = new FormData();
+            formData.append('name', form.name.value);
+            formData.append('breed', form.breed.value);
+            formData.append('birth', form.birth.value);
+            formData.append('file', form.file.files[0]);
 
-            messages.style.display = "block";
+            fetch(url, {method: 'POST', body: formData})
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (responseObject) {
+                    if (responseObject.ok) {
+                        location.reload();
+                    } else {
+                        console.log(responseObject);
+                        while (form.messages.firstChild) form.messages.removeChild(form.messages.firstChild);
+                        responseObject.message.forEach((message) => {
+                            const li = document.createElement('div');
+                            li.className = 'alert alert-danger';
+                            li.textContent = message;
+                            form.messages.appendChild(li);
+                        });
+                        form.message.style.display = "block";
+                    }
+                });
         }
-    }
 
-
+    });
 </script>

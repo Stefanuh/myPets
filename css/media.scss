@@ -2,9 +2,16 @@
   main {
     padding: 75px 0 20px 0;
   }
+
   .card {
-    width: 100% !important;
-    margin: 0 25px 25px !important;
+    margin: 0 0 15px;
+  }
+
+  #dashboard {
+    > .container-fluid > .row > .card {
+      width: 100% !important;
+      margin: 0 15px 20px;
+    }
   }
 }
 
