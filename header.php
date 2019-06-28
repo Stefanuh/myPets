@@ -9,16 +9,19 @@
         <div class="collapse navbar-collapse" id="main_menu">
             <ul class="navbar-nav ml-auto">
 
-                <?php
-                    if ($userObj->getUserID()) $menu_items = $pageObj->getMenu(1);
-                    else $menu_items = $pageObj->getMenu();
-                ?>
+                <?php $pageObj->getMenu() ?>
 
-                    <?php foreach($menu_items as $menu_item) : ?>
-                            <li class="nav-item <?php if ($menu_item['slug'] == $pageObj->getPageSlug()) echo "active" ?>">
-                                <a class="nav-link" href="/<?php echo $menu_item['slug'] ?>"><?php echo $menu_item['name']  ?> <?php if ($menu_item['slug'] == $pageObj->getPageSlug()) echo "<span class=\"sr-only\">(current)</span>" ?></a>
-                            </li>
-                    <?php endforeach; ?>
+                <?php foreach($pageObj->getMenu() as $menu_item) : ?>
+                <li class="nav-item <?php if ($menu_item['slug'] == $pageObj->getPageSlug()) echo "active" ?>">
+                    <a class="nav-link" href="/<?php echo $menu_item['slug'] ?>"><?php echo $menu_item['name']  ?> <?php if ($menu_item['slug'] == $pageObj->getPageSlug()) echo "<span class=\"sr-only\">(current)</span>" ?></a>
+                </li>
+                <?php endforeach; ?>
+
+                <?php if (!empty($userObj->getUserID())) : ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php root ?>/php/logout.php">Logout</a>
+                </li>
+                <?php endif; ?>
             </ul>
 
         </div>

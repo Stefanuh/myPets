@@ -79,37 +79,6 @@ class Query {
     }
 }
 
-class Page
-{
-    private $query;
-    private $secured;
-    private $fetchAll;
-    private $pageSlug;
-    private $user;
-
-    public function __construct() {
-        $this->query = new Query;
-        $this->fetchAll = true;
-        $this->pageSlug = explode("?", str_replace("/", "", $_SERVER['REQUEST_URI']))[0];
-        $this->user = new User;
-    }
-
-    public function getMenu($secured = 0) {
-        $this->secured = $secured;
-
-        $bind = array(
-            1 => array(
-                'key' => 'secured',
-                'value' => $this->secured
-            )
-        );
-        return $this->query->getQuery("SELECT * FROM menu WHERE secured = :secured", $bind, $this->fetchAll);
-    }
-
-    public function getPageSlug() {
-        return $this->pageSlug;
-    }
-}
 
 class User {
     private $userID;
@@ -137,6 +106,13 @@ class User {
         $this->role = $this->userData['role'];
     }
 
+    public function regularOnly(){
+        if ($this->getRole()) {
+            header("Location: /");
+            exit;
+        }
+    }
+
     public function getUserID() {
         return $this->userID;
     }
@@ -159,16 +135,103 @@ class User {
 
 }
 
+
+class Page {
+    private $query;
+    private $secured;
+    private $fetchAll;
+    private $pageSlug;
+    private $user;
+
+    public function __construct() {
+        $this->query = new Query;
+        $this->fetchAll = true;
+        $this->pageSlug = explode("?", str_replace("/", "", $_SERVER['REQUEST_URI']))[0];
+        $this->user = new User;
+        $this->secured = 0;
+    }
+
+    public function getMenu() {
+        if (!empty($this->user->getUserID())) {
+            if ($this->user->getRole()) $this->secured = 2;
+            else $this->secured = 1;
+        }
+
+        $bind = array(
+            1 => array (
+                'key' => 'secured',
+                'value' => $this->secured
+            )
+        );
+
+        return $this->query->getQuery("SELECT * FROM menu WHERE secured = :secured", $bind, 1);
+    }
+
+    public function getPageSlug() {
+        return $this->pageSlug;
+    }
+}
+
 class Pet {
+
     private $petID;
     private $query;
     private $user;
+    private $name;
+    private $breedID;
+    private $birth;
+    private $userID;
 
     public function __construct($petID = 0) {
         $this->petID = $petID;
         $this->query = new Query;
         $this->user = new User;
+        $bind = array(
+            1 => array(
+                "key" => "petID",
+                "value" => $petID
+            ),
+        );
+
+        $petData = $this->query->getQuery("SELECT * FROM pet WHERE petID = :petID", $bind);
+        $this->name = $petData['name'];
+        $this->breedID = $petData['breedID'];
+        $this->birth = $petData['birth'];
+        $this->userID = $petData['userID'];
     }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBreedID()
+    {
+        return $this->breedID;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBirth()
+    {
+        return $this->birth;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserID()
+    {
+        return $this->userID;
+    }
+
 
     function getBreedType($breedID) {
         $bind = array(
@@ -305,6 +368,32 @@ class Treatment {
     }
 
 
+}
+
+class Admin {
+    private $query;
+    private $user;
+
+    public function __construct() {
+        $this->query = new Query;
+        $this->user = new User;
+    }
+
+    public function securePage(){
+        if (!$this->user->getRole()) {
+            header("Location: /");
+            exit;
+        }
+    }
+
+    public function getAppointmentRequests() {
+        return $this->query->getQuery("SELECT * FROM appointment WHERE state = 0", $bind= array(), $fetchAll = true);
+
+    }
+
+    public function getTodayAppointments(){
+        return $this->query->getQuery("SELECT * FROM appointment WHERE state = 2 AND DATE(date) = CURDATE()", 0, 1);
+    }
 }
 
 $queryObj = new Query();

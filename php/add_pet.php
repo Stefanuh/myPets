@@ -38,7 +38,6 @@ if (!empty($_FILES["file"]['name'])) {
     $check = getimagesize($file["tmp_name"]);
 }
 
-
 $insert = $insertQuery->setQuery("INSERT INTO pet (name, breedID, birth, userID) VALUES (:name, :breedID, :birth, :userID)", $bind);
 
 if ($insert['result'] && isset($uploadOk)) {

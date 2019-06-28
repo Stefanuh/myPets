@@ -18,8 +18,8 @@
                             <div class="form">
                                 <div id="message">
                                 </div>
-                                <input type="email"  id="email" class="form-control" placeholder="Emailadres" required>
-                                <input type="password"  id="password" class="form-control" placeholder="Wachtwoord" required>
+                                <input type="email" id="email" class="form-control" placeholder="Emailadres" required>
+                                <input type="password" id="password" class="form-control" placeholder="Wachtwoord" required>
                                 <button type="submit" id="submitLogin" class="btn btn-primary">Log in</button>
                             </div>
 

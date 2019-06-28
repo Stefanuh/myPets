@@ -39,7 +39,7 @@
                                                         <div class="card-header" id="heading<?php echo $appointment['name'] ?>">
                                                             <h5 class="mb-0">
                                                                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapse<?php echo $appointment['appointmentID'] ?>" aria-expanded="true" aria-controls="collapse<?php echo $appointment['appointmentID'] ?>">
-                                                                    Afspraak op: <?php echo date_format(date_create($appointment['date']), "d-m-Y") ?>
+                                                                    Afspraak aanvraag op: <?php echo date_format(date_create($appointment['date']), "d-m-Y") ?>
                                                                 </button>
                                                             </h5>
                                                         </div>
@@ -73,7 +73,7 @@
                                                 <div class="card-header" id="heading<?php echo $appointment['name'] ?>">
                                                     <h5 class="mb-0">
                                                         <button class="btn btn-link" data-toggle="collapse" data-target="#collapse<?php echo $appointment['appointmentID'] ?>" aria-expanded="true" aria-controls="collapse<?php echo $appointment['appointmentID'] ?>">
-                                                            Afspraak op: <?php echo date_format(date_create($appointment['date']), "d-m-Y") ?>
+                                                            Afspraak van: <?php echo date_format(date_create($appointment['date']), "d-m-Y") ?>
                                                         </button>
                                                     </h5>
                                                 </div>

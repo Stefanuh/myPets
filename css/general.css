@@ -43,8 +43,30 @@ button {
   text-decoration: none;
 }
 
+.add_appointment {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+}
+
 #dashboard > .container-fluid > .row > .card {
   margin: 0 5px 10px;
+}
+
+dl {
+  background: #0068bf;
+  margin-top: 1px;
+  margin-bottom: 0;
+  padding: 5px;
+}
+dl .ui_tpicker_time_label {
+  color: white;
+}
+
+select.ui-timepicker-select.ui-state-default.ui-corner-all {
+  background: white;
+  border: none;
+  padding: 2px 10px;
 }
 
 /*# sourceMappingURL=general.css.map */

@@ -1,14 +1,14 @@
 <?php
     require_once "head.php";
     $petObj = new Pet();
+
+
 ?>
 
 <main id="dashboard">
+    <?php if ($userObj->getRole()) : header("Location: /appointment"); ?>
+    <?php else: ?>
     <div class="container-fluid">
-
-        <?php if ($userObj->getRole()) : ?>
-            Hello admin
-        <?php else: ?>
         <div class="row justify-content-center align-items-center">
 
             <?php foreach ($petObj->getUserPets() as $pet) : ?>
@@ -18,13 +18,16 @@
                     <div class="card-body">
                         <h5 class="card-title"><?php echo $pet['name'] ?></h5>
                         <p class="card-text">
-                            <span class="badge badge-info"><?php echo $petObj->getBreedByID($pet['breedID'])['name'] ?></span> <br>
-                            <span class="badge badge-secondary"><?php $date = date_create($pet['birth']); echo date_format($date, "j M Y") ?></span>
+                            <span class="badge badge-info"><?php echo $petObj->getBreedByID($pet['breedID'])['name'] ?>
+                            </span>
+                            <br>
+                            <span class="badge badge-secondary">
+                                <?php $date = date_create($pet['birth']); echo date_format($date, "j M Y") ?>
+                            </span>
                         </p>
-
-                            <input type="hidden" name="petID" value="<?php echo $pet['petID'] ?>">
-                            <a href="/pet?id=<?php echo $pet['petID'] ?>" class="btn btn-outline-primary appointment">Bekijk <?php echo $pet['name'] ?></a>
-                        </form>
+                        <a href="/pet?id=<?php echo $pet['petID'] ?>" class="btn btn-outline-primary appointment">
+                            Bekijk <?php echo $pet['name'] ?>
+                        </a>
                     </div>
                 </div>
 
@@ -38,84 +41,83 @@
                         Een huisdier toevoegen?<br>
                         Klik op de onderstaande knop
                     </p>
-                    <button  data-toggle="modal" data-target="#registerPet" class="btn btn-outline-success">Huisdier registreren</button>
+                    <button  data-toggle="modal" data-target="#registerPet" class="btn btn-outline-success">
+                        Huisdier registreren
+                    </button>
                 </div>
             </div>
 
         </div>
-
-        <?php endif; ?>
     </div>
 </main>
 
-    <div class="modal fade" id="registerPet" tabindex="-1" role="dialog" aria-labelledby="registerPet" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Huisdier registreren</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="addPetForm" method="POST" enctype="multipart/form-data">
-                        <div id="message">
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Naam</label>
-                            <input type="text" name="name" class="form-control" id="name" placeholder="Geef de naam van uw huisdier" required>
-                        </div>
+<div class="modal fade" id="registerPet" tabindex="-1" role="dialog" aria-labelledby="registerPet" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Huisdier registreren</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addPetForm" method="POST" enctype="multipart/form-data">
+                    <div id="message">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Naam</label>
+                        <input type="text" name="name" class="form-control" id="name"
+                               placeholder="Geef de naam van uw huisdier" required>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="breedType">Soort</label>
-                            <select name="breedType" id="breedType" class="form-control" required>
-                                <option value="dog">Hond</option>
-                                <option value="cat">Kat</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label for="breedType">Soort</label>
+                        <select name="breedType" id="breedType" class="form-control" required>
+                            <option value="dog">Hond</option>
+                            <option value="cat">Kat</option>
+                        </select>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="breed">Ras</label>
-                            <select name="breed" id="breed" class="form-control select" required>
-                                <?php foreach ($petObj->getBreeds() as $breed) : ?>
-                                    <option value="<?php echo $breed['breedID'] ?>"><?php echo $breed['name'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="datepicker">Geboortedatum</label>
-                            <input type="text" name="birth" id="birth" class="form-control datepicker" placeholder="Geef de geboortedatum van uw huisdier" value="<?php echo date('d-m-Y') ?>" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="breed">Ras</label>
+                        <select name="breed" id="breed" class="form-control select" required>
+                            <?php foreach ($petObj->getBreeds() as $breed) : ?>
+                                <option value="<?php echo $breed['breedID'] ?>"><?php echo $breed['name'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="datepicker">Geboortedatum</label>
+                        <input type="text" name="birth" id="birth" class="form-control datepicker"
+                               placeholder="Geef de geboortedatum van uw huisdier"
+                               value="<?php echo date('d-m-Y') ?>" required>
+                    </div>
 
-                        <div class="form-group">
-                            <label>Foto</label>
-                            <div class="custom-file">
-                                <input type="file" name="file" class="custom-file-input" id="picture" accept="image/*">
-                                <label class="custom-file-label" for="petPicture">Kies een foto (optioneel)</label>
-                            </div>
+                    <div class="form-group">
+                        <label>Foto</label>
+                        <div class="custom-file">
+                            <input type="file" name="file" class="custom-file-input" id="picture" accept="image/*">
+                            <label class="custom-file-label" for="petPicture">Kies een foto (optioneel)</label>
                         </div>
+                    </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuleren</button>
-                            <button type="button" name="addPet" id="submitPet" class="btn btn-success">Registreer</button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuleren</button>
+                        <button type="button" name="addPet" id="submitPet" class="btn btn-success">Registreer</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
 <?php require_once "footer.php" ?>
 
 <script>
-    $( "#breedType" ).change(function() {
-        if ( $(this).val() === 'cat') {
-            console.log("katje!");
-            $( "#breed" ).load( "php/parts/pet_breeds.php #cat > *" );
-        } else {
-            $( "#breed" ).load( "php/parts/pet_breeds.php #dog > *" );
 
-        }
+    $( "#breedType" ).change(function() {
+        if ( $(this).val() === 'cat') $( "#breed" ).load( "php/parts/pet_breeds.php #cat > *" );
+        else $( "#breed" ).load( "php/parts/pet_breeds.php #dog > *" );
     });
 
     const form = {
@@ -206,3 +208,5 @@
 
     });
 </script>
+
+<?php endif; ?>

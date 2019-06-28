@@ -1,37 +1,62 @@
 <?php
 
-require_once "connection.php";
+require_once "../functions.php";
 
-if(isset($_POST['createAccount'])){
+$firstName = !empty($_POST['firstName']) ? trim($_POST['firstName']) : null;
+$lastName = !empty($_POST['lastName']) ? trim($_POST['lastName']) : null;
+$email = !empty($_POST['email']) ? trim($_POST['email']) : null;
+$pass = !empty($_POST['password']) ? trim($_POST['password']) : null;
+$message = array();
+$ok = false;
+$registerObj = new Query();
 
-    $firstName = !empty($_POST['firstName']) ? trim($_POST['firstName']) : null;
-    $lastName = !empty($_POST['lastName']) ? trim($_POST['lastName']) : null;
-    $email = !empty($_POST['email']) ? trim($_POST['email']) : null;
-    $pass = !empty($_POST['password']) ? trim($_POST['password']) : null;
-    $passCheck = !empty($_POST['passwordCheck']) ? trim($_POST['passwordCheck']) : null;
+$bind = array(
+    1 => array (
+        'key' => 'email',
+        'value' => $email
+    )
+);
 
-    if ($pass !== $passCheck) die("Wachtwoorden komen niet met elkaar overeen");
+$checkUser = $registerObj->getQuery("SELECT COUNT(email) AS num FROM user WHERE email = :email", $bind);
 
-    $sql = "SELECT COUNT(email) AS num FROM user WHERE email = :email";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':email', $email);
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if($row['num'] > 0) die('U heeft al een account');
-
-    $passwordHash = password_hash($pass, PASSWORD_BCRYPT, array("cost" => 12));
-
-    $sql = "INSERT INTO user (firstName, lastName, email, password) VALUES (:firstName, :lastName, :email, :password)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':firstName', $firstName);
-    $stmt->bindValue(':lastName', $lastName);
-    $stmt->bindValue(':email', $email);
-    $stmt->bindValue(':password', $passwordHash);
-    $result = $stmt->execute();
-
-    if($result){
-        echo 'Bedankt voor het registreren';
-    }
-
+if($checkUser['num'] > 0) {
+    $message[] = 'Er is al een account registreert met dit emailadres';
+} else {
+    $ok = true;
 }
+
+$passwordHash = password_hash($pass, PASSWORD_BCRYPT, array("cost" => 12));
+
+$bind = array(
+    1 => array (
+        'key' => 'firstName',
+        'value' => $firstName
+    ),
+    2 => array (
+        'key' => 'lastName',
+        'value' => $lastName
+    ),
+    3 => array (
+        'key' => 'email',
+        'value' => $email
+    ),
+    4 => array (
+        'key' => 'password',
+        'value' => $passwordHash
+    ),
+);
+
+if ($ok) {
+    $result = $registerObj->setQuery("INSERT INTO user (firstName, lastName, email, password) VALUES (:firstName, :lastName, :email, :password)", $bind);
+    if (!$result) {
+        $message[] = "Oops... er ging iets mis, probeer het later opnieuw";
+        $ok = false;
+    }
+}
+
+echo json_encode(
+    array(
+        'message' => $message,
+        'ok' => $ok
+    )
+);
