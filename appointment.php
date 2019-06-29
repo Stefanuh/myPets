@@ -153,7 +153,7 @@
 
                     <div class="form-group">
                         <label for="datepicker">Datum</label>
-                        <input type="text" id="appointmentCreate_date" class="form-control datetimepicker" value="">
+                        <input type="text" id="appointmentCreate_date" class="form-control datetimepicker" value="" readonly="readonly">
                     </div>
 
                     <div class="form-group" id="phoneElement">
@@ -200,8 +200,7 @@
             type: 'POST',
             url: 'php/parts/pet_by_userID.php',
             data: { userID: $(this).val() },
-            success: function(data)
-            {
+            success: function(data) {
                 $('#appointmentCreate_pet').html(data);
             }
         });
@@ -210,12 +209,10 @@
             type: 'POST',
             url: 'php/parts/appointment_new_phone.php',
             data: { userID: $(this).val() },
-            success: function(data)
-            {
+            success: function(data) {
                 $('#phoneElement').html(data);
             }
-        });
-
+        })
     });
 
     $('#appointmentCreateSubmit').click(function() {
@@ -238,7 +235,7 @@
         let error = false;
 
         if (form.user.value === "") {
-            messageList.push("Kies aub een gebruiker in");
+            messageList.push("Kies aub een gebruiker");
             error = true;
         }
 

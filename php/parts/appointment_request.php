@@ -18,7 +18,7 @@
 
 <div class="form-group">
     <label for="datepicker">Datum</label>
-    <input type="text" name="date" class="form-control datetimepicker"  value="<?php echo $admin->getAppointmentRequest($appointmentID)['date']; ?>" required>
+    <input type="text" name="date" class="form-control datetimepicker"  value="<?php echo $admin->getAppointmentRequest($appointmentID)['date']; ?>" readonly="readonly">
 </div>
 
 <div class="form-group">

@@ -139,7 +139,7 @@
 
                     <div class="form-group">
                         <label for="datepicker">Voorkeursdatum</label>
-                        <input type="text" name="date" id="date" class="form-control datepicker-future" placeholder="Geef een voorkeursdag voor de afspraak" required>
+                        <input type="text" name="date" id="date" class="form-control datepicker-future" placeholder="Geef een voorkeursdag voor de afspraak" readonly="readonly">
                     </div>
 
                     <?php if (!$userObj->getPhone()) : ?>
@@ -167,6 +167,7 @@
 <?php require_once "footer.php" ?>
 
 <script>
+
     $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
         localStorage.setItem('activeTab', $(e.target).attr('href'));
     });
@@ -219,6 +220,7 @@
         } else {
             const url = '/php/add_appointment.php';
             const formData = new FormData();
+            formData.append('userID', <?php echo $userObj->getUserID() ?>);
             formData.append('name', form.name.value);
             formData.append('date', form.date.value);
             formData.append('petID', <?php echo $petID ?>);

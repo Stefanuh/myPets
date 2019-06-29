@@ -30,7 +30,7 @@ $appointmentID = $_POST['appointmentID'];
 
 <div class="form-group">
     <label for="datepicker">Datum</label>
-    <input type="text" name="datepicker" class="form-control datetimepicker" value="">
+    <input type="text" name="datepicker" class="form-control datetimepicker" readonly="readonly">
 </div>
 
 <div class="form-group">

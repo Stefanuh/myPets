@@ -13,7 +13,6 @@ $message = array();
 $ok = true;
 $insertQuery = new Query();
 
-if (!empty($userID)) $userID = $userObj->getUserID();
 
 if (!empty($phone)) {
     $bind = array (

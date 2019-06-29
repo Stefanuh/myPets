@@ -108,3 +108,7 @@ table.ui-datepicker-calendar {
     }
   }
 }
+
+.form-control:disabled, .form-control[readonly] {
+  background: white;
+}

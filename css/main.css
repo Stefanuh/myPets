@@ -169,6 +169,10 @@ table.ui-datepicker-calendar {
   content: "Selecteren" !important;
 }
 
+.form-control:disabled, .form-control[readonly] {
+  background: white;
+}
+
 @media only screen and (max-width: 727px) {
   main {
     padding: 75px 0 20px 0;

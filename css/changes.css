@@ -98,4 +98,8 @@ table.ui-datepicker-calendar {
   content: "Selecteren" !important;
 }
 
+.form-control:disabled, .form-control[readonly] {
+  background: white;
+}
+
 /*# sourceMappingURL=changes.css.map */

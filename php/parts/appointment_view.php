@@ -15,7 +15,7 @@ $appointmentID = $_POST['appointmentID'];
 
 <div class="form-group">
     <label for="datepicker">Datum</label>
-    <input type="text" id="appointmentView_date" class="form-control datetimepicker" value="<?php echo date_format(date_create($admin->getAppointment($appointmentID)['date']),"d-m-Y H:i" ); ?>" required>
+    <input type="text" id="appointmentView_date" class="form-control datetimepicker" value="<?php echo date_format(date_create($admin->getAppointment($appointmentID)['date']),"d-m-Y H:i" ); ?>" readonly="readonly">
 </div>
 
 

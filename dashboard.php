@@ -90,7 +90,7 @@
                         <label for="datepicker">Geboortedatum</label>
                         <input type="text" name="birth" id="birth" class="form-control datepicker"
                                placeholder="Geef de geboortedatum van uw huisdier"
-                               value="<?php echo date('d-m-Y') ?>" required>
+                               value="<?php echo date('d-m-Y') ?>" readonly="readonly">
                     </div>
 
                     <div class="form-group">
