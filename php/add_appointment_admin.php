@@ -4,10 +4,11 @@ require_once "../functions.php";
 
 $userID = !empty($_POST['userID']) ? trim($_POST['userID']) : null;
 $name = !empty($_POST['name']) ? trim($_POST['name']) : null;
-$date = date("Y-m-d H:i", strtotime(!empty($_POST['date']) ? trim($_POST['date']) : null));
 $petID = !empty($_POST['petID']) ? trim($_POST['petID']) : null;
+$date = date("Y-m-d H:i", strtotime(!empty($_POST['date']) ? trim($_POST['date']) : null));
 $description = !empty($_POST['description']) ? trim($_POST['description']) : null;
 $phone = !empty($_POST['phone']) ? trim($_POST['phone']) : null;
+
 $current_date = new DateTime();
 $message = array();
 $ok = true;
@@ -50,7 +51,7 @@ $bind = array (
 
 );
 
-$insert = $insertQuery->setQuery("INSERT INTO appointment (name, description, date, petID) VALUES (:name, :description, :date, :petID)", $bind);
+$insert = $insertQuery->setQuery("INSERT INTO appointment (name, description, date, petID, state) VALUES (:name, :description, :date, :petID, 1)", $bind);
 
 echo json_encode(
     array(

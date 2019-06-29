@@ -22,3 +22,17 @@
     };
     $.timepicker.setDefaults($.timepicker.regional['nl']);
 })(jQuery);
+
+$( function() {
+    $(".datetimepicker").datetimepicker({
+        controlType: 'select',
+        oneLine: true,
+        timeFormat: 'HH:mm',
+        showButtonPanel: false,
+        hourMin: 9,
+        hourMax: 19,
+        stepMinute: 15,
+        minDate: 1,
+
+    });
+});

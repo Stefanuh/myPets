@@ -18,7 +18,7 @@
             <div class="row">
                 <div class="card" style="width: 100%">
                     <div class="card-header">
-                        <nav class="nav nav-tabs card-header-tabs" role="tablist">
+                        <nav class="nav nav-tabs card-header-tabs" id="petNav" role="tablist">
                             <a class="nav-item nav-link active" id="nav-appointment-tab" data-toggle="tab" href="#nav-appointment" role="tab" aria-controls="nav-appointment" aria-selected="true">Afspraken</a>
                             <a class="nav-item nav-link" id="nav-treatment-tab" data-toggle="tab" href="#nav-treatment" role="tab" aria-controls="nav-treatment" aria-selected="false">Behandelingen</a>
                         </nav>
@@ -31,15 +31,15 @@
                                 <div class="card">
                                     <h5 class="card-header">Opkomende afspraken</h5>
                                     <div class="card-body">
-                                        <?php if (!empty($appointmentObj->getAll())) : ?>
+                                        <?php if (!empty($appointmentObj->getUpcoming())) : ?>
                                             <div id="accordion" class="mt-2">
-                                                <?php foreach ($appointmentObj->getAll() as $appointment) : ?>
+                                                <?php foreach ($appointmentObj->getUpcoming() as $appointment) : ?>
                                                     <div class="card">
 
                                                         <div class="card-header" id="heading<?php echo $appointment['name'] ?>">
                                                             <h5 class="mb-0">
                                                                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapse<?php echo $appointment['appointmentID'] ?>" aria-expanded="true" aria-controls="collapse<?php echo $appointment['appointmentID'] ?>">
-                                                                    Afspraak aanvraag op: <?php echo date_format(date_create($appointment['date']), "d-m-Y") ?>
+                                                                    Afspraak voor <?php echo date_format(date_create($appointment['date']), "j M Y") ?>
                                                                 </button>
                                                             </h5>
                                                         </div>
@@ -55,7 +55,7 @@
                                                 <?php endforeach; ?>
                                             </div>
                                         <?php else : ?>
-                                            Er zijn nog geen afspraken afgerond
+                                            Er zijn geen opkomende afspraken<br><br>
                                         <?php endif; ?>
 
                                         <button type="button" data-toggle="modal" data-target="#addAppointment" class="btn btn-primary">Een nieuwe afspraak maken</button>
@@ -63,17 +63,17 @@
                                 </div>
 
                                 <div class="card">
-                                    <h5 class="card-header">Afgelopen afspraken</h5>
+                                    <h5 class="card-header">Vorige afspraken</h5>
                                     <div class="card-body">
-                                        <?php if (!empty($appointmentObj->getAll(1))) : ?>
+                                        <?php if (!empty($appointmentObj->getPast())) : ?>
                                         <div id="accordion" class="mt-2">
-                                            <?php foreach ($appointmentObj->getAll(1) as $appointment) : ?>
+                                            <?php foreach ($appointmentObj->getPast() as $appointment) : ?>
                                             <div class="card">
 
                                                 <div class="card-header" id="heading<?php echo $appointment['name'] ?>">
                                                     <h5 class="mb-0">
                                                         <button class="btn btn-link" data-toggle="collapse" data-target="#collapse<?php echo $appointment['appointmentID'] ?>" aria-expanded="true" aria-controls="collapse<?php echo $appointment['appointmentID'] ?>">
-                                                            Afspraak van: <?php echo date_format(date_create($appointment['date']), "d-m-Y") ?>
+                                                            Afspraak van <?php echo date_format(date_create($appointment['date']), "j M Y") ?>
                                                         </button>
                                                     </h5>
                                                 </div>
@@ -96,12 +96,12 @@
                             </div>
 
                             <div class="tab-pane fade" id="nav-treatment" role="tabpanel" aria-labelledby="nav-treatment-tab">
-                                <?php if($treatment->getAll()) : ?>
+                                <?php if($treatment->getAllData()) : ?>
                                     <ul class="list-group">
-                                    <?php foreach ($treatment->getAll() as $treatment) : ?>
+                                    <?php foreach ($treatment->getAllData() as $treatment) : ?>
                                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                                 <?php echo $treatment['name'] ?>
-                                                <span class="badge badge-secondary badge-pill"><?php echo date_format(date_create($treatment['date']), "d-m-Y") ?></span>
+                                                <span class="badge badge-secondary badge-pill"><?php echo date_format(date_create($treatment['date']), "j M Y") ?></span>
                                             </li>
                                     <?php endforeach; ?>
                                     </ul>
@@ -142,6 +142,13 @@
                         <input type="text" name="date" id="date" class="form-control datepicker-future" placeholder="Geef een voorkeursdag voor de afspraak" required>
                     </div>
 
+                    <?php if (!$userObj->getPhone()) : ?>
+                    <div class="form-group">
+                        <label for="name">Telefoonnummer</label>
+                        <input type="text" name="phone" class="form-control" id="phone" placeholder="Geef uw telefoonnummer" max="10" required>
+                    </div>
+                    <?php endif; ?>
+
                     <div class="form-group">
                         <label for="name">Extra informatie (optioneel)</label>
                         <textarea  name="description" id="description" class="form-control" aria-label="With textarea" placeholder="Geef wat extra informatie over de reden van uw afspraak"></textarea>
@@ -157,8 +164,15 @@
     </div>
 </div>
 
+<?php require_once "footer.php" ?>
 
 <script>
+    $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+        localStorage.setItem('activeTab', $(e.target).attr('href'));
+    });
+    const activeTab = localStorage.getItem('activeTab');
+    if(activeTab) $('#petNav a[href="' + activeTab + '"]').tab('show');
+
     const form = {
         messages: document.getElementById('message'),
         submit: document.getElementById('submitAppointment'),
@@ -166,6 +180,8 @@
         date: document.getElementById('date'),
         description: document.getElementById('description'),
     };
+
+    const phone = document.getElementById('phone');
 
     form.submit.addEventListener('click', function (e) {
         e.preventDefault();
@@ -186,6 +202,13 @@
             error = true;
         }
 
+        if (phone !== null)  {
+            if (phone.value === "") {
+                messageList.push("Voer aub uw telefoonnummer in");
+                error = true;
+            }
+        }
+
         if (error) {
             messageList.forEach(function (message) {
                 const li = document.createElement('div');
@@ -199,6 +222,7 @@
             formData.append('name', form.name.value);
             formData.append('date', form.date.value);
             formData.append('petID', <?php echo $petID ?>);
+            if (phone !== null ) formData.append('phone', phone.value);
             if (form.description.value !== "") formData.append('description', form.description.value);
 
             fetch(url, {method: 'POST', body: formData})
@@ -223,5 +247,3 @@
         }
     });
 </script>
-
-<?php require_once "footer.php" ?>

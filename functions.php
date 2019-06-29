@@ -88,6 +88,7 @@ class User {
     private $userData;
     private $query;
     private $bind;
+    private $phone;
 
     public function __construct() {
         if (isset($_SESSION['userID'])) {
@@ -100,10 +101,11 @@ class User {
                 "value" => $this->userID
             )
         );
-        $this->userData = $this->query->getQuery("SELECT firstName, lastName, email, role FROM user WHERE userID = :userID", $this->bind);
+        $this->userData = $this->query->getQuery("SELECT firstName, lastName, email, phone, role FROM user WHERE userID = :userID", $this->bind);
         $this->firstName = $this->userData['firstName'];
         $this->lastName = $this->userData['lastName'];
         $this->role = $this->userData['role'];
+        $this->phone = $this->userData['phone'];
     }
 
     public function regularOnly(){
@@ -131,6 +133,9 @@ class User {
 
     public function getRole() {
         return $this->role;
+    }
+    public function getPhone() {
+        return $this->phone;
     }
 
 }
@@ -303,18 +308,14 @@ class Appointment {
     }
 
 
-    public function getAll($state = 0) {
+    public function getUpcoming() {
         $bind = array(
             1 => array(
                 "key" => "petID",
                 "value" => $this->petID
             ),
-            2 => array (
-                "key" => "state",
-                "value" => $state
-            )
         );
-        return $this->query->getQuery("SELECT * FROM appointment a WHERE a.state = :state AND petID = :petID", $bind, $fetchAll = true);
+        return $this->query->getQuery("SELECT * FROM appointment a WHERE (a.state = 0 OR a.state = 1) AND petID = :petID", $bind, $fetchAll = true);
     }
 
     public function getPast(){
@@ -322,13 +323,9 @@ class Appointment {
             1 => array(
                 "key" => "petID",
                 "value" => $this->petID
-            )
+            ),
         );
-        return $this->query->getQuery("SELECT * FROM appointment a
-                                                INNER JOIN appointment_treatment ap ON a.appointmentID = ap.appointmentID
-                                                INNER JOIN treatment t on ap.treatmentID = t.treatmentID
-                                                WHERE a.state = 1 AND petID = :petID
-                                                GROUP BY a.appointmentID", $bind, $fetchAll = true);
+        return $this->query->getQuery("SELECT * FROM appointment a WHERE a.state = 2 AND petID = :petID", $bind, $fetchAll = true);
     }
 
     public function getAllAppointments(){
@@ -354,7 +351,7 @@ class Treatment {
         $this->user = new User;
     }
 
-    public function getAll(){
+    public function getAllData(){
         $bind = array(
             1 => array(
                 "key" => "petID",
@@ -364,7 +361,11 @@ class Treatment {
         return $this->query->getQuery("SELECT * FROM appointment a
                                                 INNER JOIN appointment_treatment ap ON a.appointmentID = ap.appointmentID
                                                 INNER JOIN treatment t on ap.treatmentID = t.treatmentID
-                                                WHERE a.state = 1 AND petID = :petID", $bind, $fetchAll = true);
+                                                WHERE a.state = 2 AND petID = :petID", $bind, $fetchAll = true);
+    }
+
+    public function getAllTreatments(){
+        return $this->query->getQuery("SELECT * FROM treatment", 0, 1);
     }
 
 
@@ -392,8 +393,69 @@ class Admin {
     }
 
     public function getTodayAppointments(){
-        return $this->query->getQuery("SELECT * FROM appointment WHERE state = 2 AND DATE(date) = CURDATE()", 0, 1);
+        return $this->query->getQuery("SELECT * FROM appointment WHERE state = 1 AND DATE(date) = CURDATE()", 0, 1);
     }
+
+    public function getAllUsers(){
+        return $this->query->getQuery("SELECT * FROM user WHERE role = 0", 0, 1);
+    }
+
+    public function getUserData($userID) {
+        $bind = array(
+            1 => array (
+                'key' => 'userID',
+                'value' => $userID
+            )
+        );
+        return $this->query->getQuery("SELECT * FROM user WHERE userID = :userID", $bind, 0);
+
+    }
+
+
+    public function getAllPetsFromUser($userID){
+        $bind = array(
+            1 => array (
+                'key' => 'userID',
+                'value' => $userID
+            )
+        );
+
+        return $this->query->getQuery("SELECT * FROM pet WHERE userID = :userID", $bind, 1);
+    }
+
+    public function getAppointmentRequest($appointmentID) {
+        $bind = array(
+            1 => array (
+                'key' => 'appointmentID',
+                'value' => $appointmentID
+            )
+        );
+        return $this->query->getQuery("SELECT * FROM appointment WHERE appointmentID = :appointmentID", $bind, 0);
+    }
+
+    public function getUserByPetID($petID) {
+        $bind = array(
+            1 => array (
+                'key' => 'petID',
+                'value' => $petID
+            )
+        );
+        return $this->query->getQuery("SELECT * FROM pet p
+                                                INNER JOIN user u ON p.userID = u.userID
+                                                WHERE p.petID = :petID", $bind, 0);
+    }
+
+    public function getAppointment($appointmentID) {
+        $bind = array(
+            1 => array (
+                'key' => 'appointmentID',
+                'value' => $appointmentID
+            )
+        );
+        return $this->query->getQuery("SELECT * FROM appointment WHERE appointmentID = :appointmentID", $bind, 0);
+
+    }
+
 }
 
 $queryObj = new Query();
