@@ -1,49 +1,43 @@
 <?php
     require_once "head.php";
     require_once "header.php"
-
 ?>
-
-    <main>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Maak een account aan</h5>
-                            <p class="card-text">Vul de onderstaande gegevens in</p>
-                            <div class="form">
-                                <div id="message">
-                                </div>
-                                <input class="form-control" id="firstName" type="text" placeholder="Voornaam">
-                                <input class="form-control" id="lastName" type="text" placeholder="Achternaam">
-                                <input class="form-control" id="email" type="email" placeholder="Emailadres">
-                                <input class="form-control" id="password" type="password" placeholder="Wachtwoord">
-                                <input class="form-control" id="passwordCheck" type="password" placeholder="Wachtwoord nogmaals">
-                                <button type="submit" id="createAccount" class="btn btn-primary mb-2">Maak account</button>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Maak een account aan</h5>
+                        <p class="card-text">Vul de onderstaande gegevens in</p>
+                        <div class="form">
+                            <div id="message">
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Ik heb een account</h5>
-                            <p class="card-text">Al klant van myPets?</p>
-                            <a href="/login" class="btn btn-secondary">Log in</a>
+                            <input class="form-control" id="firstName" type="text" placeholder="Voornaam">
+                            <input class="form-control" id="lastName" type="text" placeholder="Achternaam">
+                            <input class="form-control" id="email" type="email" placeholder="Emailadres">
+                            <input class="form-control" id="password" type="password" placeholder="Wachtwoord">
+                            <input class="form-control" id="passwordCheck" type="password" placeholder="Wachtwoord nogmaals">
+                            <button id="createAccount" class="btn btn-primary mb-2">Maak account</button>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Ik heb een account</h5>
+                        <p class="card-text">Al klant van myPets?</p>
+                        <a href="/login" class="btn btn-secondary">Log in</a>
+                    </div>
+                </div>
+            </div>
         </div>
-
-
-    </main>
-
+    </div>
+</main>
 <?php require_once "footer.php" ?>
-
-
 <script>
+    // Een constant met alle inputs
     const form = {
         firstName: document.getElementById('firstName'),
         lastName: document.getElementById('lastName'),
@@ -54,33 +48,25 @@
         submit: document.getElementById('createAccount'),
     };
 
-    form.submit.addEventListener('click', function (e) {
-        e.preventDefault();
-
-        // Clear all messages first
+    form.submit.addEventListener('click', function () {
+        // Als er al errors waren, deze eerst weghalen
         while(form.messages.firstChild) form.messages.removeChild(form.messages.firstChild);
         let messageList = [];
         let error = false;
 
-        // Check if fist name is empty
+        // Checks of de inputs niet leeg zijn
         if (form.firstName.value === "") {
             messageList.push("Vul aub uw voornaam in");
             error = true;
         }
-
-        // Check if last name is empty
         if (form.lastName.value === "") {
             messageList.push("Vul aub uw achternaam in");
             error = true;
         }
-
-        // Check if email is empty
         if (form.email.value === "") {
             messageList.push("Vul aub uw emailadres in");
             error = true;
         }
-
-        // Check if password is empty
         if (form.password.value === "") {
             messageList.push("Vul aub uw wachtwoord in");
             error = true;
@@ -92,7 +78,7 @@
             error = true;
         }
 
-        // If a check wasn't passed then add error message
+        // Toon error melding(en) als er een error was
         if (error) {
             messageList.forEach(function(message) {
                 const li = document.createElement('div');
@@ -109,27 +95,25 @@
             formData.append('password', form.password.value);
 
             fetch(url, { method: 'POST', body: formData })
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (responseObject) {
-                    if (responseObject.ok) {
-                        location.href = 'login';
-                    } else {
-                        while(form.messages.firstChild) form.messages.removeChild(form.messages.firstChild);
-                        responseObject.message.forEach((message) => {
-                            const li = document.createElement('div');
-                            li.className = 'alert alert-danger';
-                            li.textContent = message;
-                            form.messages.appendChild(li);
-                        });
-                        form.message.style.display = "block";
-                    }
-                });
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (responseObject) {
+                // Als registreren gelukt is dan refreshen
+                if (responseObject.ok) {
+                    location.reload();
+                } else {
+                    // Zo niet toon dan foutmeldingen
+                    while(form.messages.firstChild) form.messages.removeChild(form.messages.firstChild);
+                    responseObject.message.forEach((message) => {
+                        const li = document.createElement('div');
+                        li.className = 'alert alert-danger';
+                        li.textContent = message;
+                        form.messages.appendChild(li);
+                    });
+                    form.message.style.display = "block";
+                }
+            });
         }
-
     });
-
-
 </script>
-

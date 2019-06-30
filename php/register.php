@@ -47,7 +47,8 @@ $bind = array(
 );
 
 if ($ok) {
-    $result = $registerObj->setQuery("INSERT INTO user (firstName, lastName, email, password) VALUES (:firstName, :lastName, :email, :password)", $bind);
+    $result = $registerObj->setQuery("INSERT INTO user (firstName, lastName, email, password) 
+VALUES (:firstName, :lastName, :email, :password)", $bind);
     if (!$result) {
         $message[] = "Oops... er ging iets mis, probeer het later opnieuw";
         $ok = false;

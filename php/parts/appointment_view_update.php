@@ -3,7 +3,6 @@
 require_once "../../functions.php";
 
 $query = new Query();
-
 $appointmentID = $_POST['appointmentID'];
 $name = !empty($_POST['name']) ? trim($_POST['name']) : null;
 $date = date("Y-m-d H:i", strtotime(!empty($_POST['date']) ? trim($_POST['date']) : null));
@@ -31,7 +30,6 @@ $bindAppointment = array (
         'value' => $appointmentID
     )
 );
-
 foreach ($treatments as $treatmentObj) {
     $bindTreatment = array(
         1 => array(
@@ -43,11 +41,12 @@ foreach ($treatments as $treatmentObj) {
             'value' => $treatmentObj
         )
     );
-
-    $query->setQuery("INSERT INTO appointment_treatment(appointmentID, treatmentID) VALUES(:appointmentID, :treatmentID)", $bindTreatment);
+    $query->setQuery("INSERT INTO appointment_treatment(appointmentID, treatmentID) 
+VALUES(:appointmentID, :treatmentID)", $bindTreatment);
 }
 
-$query->setQuery("UPDATE appointment SET name = :name, description = :description, date = :date, state = 2 WHERE appointmentID = :appointmentID", $bindAppointment);
+$query->setQuery("UPDATE appointment SET name = :name, description = :description, date = :date, state = 2 
+WHERE appointmentID = :appointmentID", $bindAppointment);
 
 echo json_encode(
     array(

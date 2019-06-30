@@ -1,8 +1,11 @@
 <?php
 
 session_start();
+
+// ! --- Pas de URL hier aan als de website van verhuisd --- !
 define("root", "https://stefanjovanovic.nl");
 
+// Een class voor de connectie met de database
 class DB {
     private $connection;
     private $host;
@@ -13,6 +16,7 @@ class DB {
     private $options;
 
     public function __construct() {
+        // ! --- Pas de onderstaande gegevens aan als de database server wordt geweizigd --- !
         $this->host = 'localhost';
         $this->username = 'stefanjovanovic_nl_mypets';
         $this->password = 'kg7Ry7P3jdWM';
@@ -30,11 +34,13 @@ class DB {
         }
     }
 
+    // Een functie die gebruikt wordt in de Query class
     public function getConnection(){
         return $this->connection;
     }
 }
 
+// Een class waar de set en get querie functies aangemaakt worden
 class Query {
     private $db;
     private $connection;
@@ -46,6 +52,10 @@ class Query {
         $this->connection = $this->db->getConnection();
     }
 
+    // Een get query die informatie uit de database haalt
+    // In de statement variable geef je de select statement aan
+    // In de bind array geef je alle variabelen aan die gebind moeten worden
+    // de fetchAll optie zorgt voor meerdere resultaten als deze aanstaat
     public function getQuery($statement, $bind = array(), $fetchAll = false) {
         $this->statement = $statement;
         $this->bind = $bind;
@@ -62,6 +72,10 @@ class Query {
 
     }
 
+    // Een set query die data in de database zet
+    // In de statement variable geef je de statement aan (update, delete)
+    // In de bind array geef je alle variablen aan die gebind moeten worden
+    // De return is een array met de resultaat (true, false) en de laatst ingevoerde ID
     public function setQuery($statement, $bind) {
         $this->statement = $statement;
         $this->bind = $bind;
@@ -78,10 +92,9 @@ class Query {
         return $response;
     }
 
-
 }
 
-
+// Een class waar alle informatie van een normale gebruiker opgehaald kan worden
 class User {
     private $userID;
     private $firstName;
@@ -93,9 +106,7 @@ class User {
     private $phone;
 
     public function __construct() {
-        if (isset($_SESSION['userID'])) {
-            $this->userID = $_SESSION['userID'];
-        }
+        if (isset($_SESSION['userID'])) $this->userID = $_SESSION['userID'];
         $this->query = new Query;
         $this->bind = array(
             1 => array(
@@ -110,11 +121,9 @@ class User {
         $this->phone = $this->userData['phone'];
     }
 
+    // Dit beveiligd pagina's waar alleen normale gebruikers bij kunnen (geen admins - zie Admin class onder in)
     public function regularOnly(){
-        if ($this->getRole()) {
-            header("Location: /");
-            exit;
-        }
+        if ($this->getRole()) header("Location: /");
     }
 
     public function getUserID() {
@@ -129,6 +138,7 @@ class User {
         return $this->lastName;
     }
 
+    // Een functie die de volledige naam van de gebruiker terug geeft
     public function getFullName() {
         return $this->firstName." ".$this->lastName;
     }
@@ -142,7 +152,7 @@ class User {
 
 }
 
-
+// Een class die de menu en slug klaarzet voor elke pagina
 class Page {
     private $query;
     private $secured;
@@ -158,6 +168,8 @@ class Page {
         $this->secured = 0;
     }
 
+    // Een functie die alle menu items uit de database haalt die bij de rol van de gebruiker horen
+    // Als er geen gebruiker bestaat worden de menu items opgehaald die niet beveiligd zijn
     public function getMenu() {
         if (!empty($this->user->getUserID())) {
             if ($this->user->getRole()) $this->secured = 2;
@@ -170,17 +182,17 @@ class Page {
                 'value' => $this->secured
             )
         );
-
         return $this->query->getQuery("SELECT * FROM menu WHERE secured = :secured", $bind, 1);
     }
 
+    // De slug van de pagina wordt opgehaald, die het gedeelte na de / en voor de ?
     public function getPageSlug() {
         return $this->pageSlug;
     }
 }
 
+// Een class waar alle informatie van een dier staat
 class Pet {
-
     private $petID;
     private $query;
     private $user;
@@ -199,7 +211,6 @@ class Pet {
                 "value" => $petID
             ),
         );
-
         $petData = $this->query->getQuery("SELECT * FROM pet WHERE petID = :petID", $bind);
         $this->name = $petData['name'];
         $this->breedID = $petData['breedID'];
@@ -207,39 +218,23 @@ class Pet {
         $this->userID = $petData['userID'];
     }
 
-    /**
-     * @return mixed
-     */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getBreedID()
-    {
+    public function getBreedID() {
         return $this->breedID;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getBirth()
-    {
+    public function getBirth() {
         return $this->birth;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUserID()
-    {
+    public function getUserID() {
         return $this->userID;
     }
 
-
+    // Een functie die de naam van een ras vindt gekoppeld aan een breedID
     function getBreedType($breedID) {
         $bind = array(
             1 => array(
@@ -252,6 +247,8 @@ class Pet {
                                                 WHERE breedID = :breedID", $bind));
     }
 
+    // Deze functie zoekt op een foto van de huisdier
+    // Als deze niet bestaat geeft de functie een default foto van de huisdier soort terug
     function getPicture($petID, $breedID) {
         if (!empty(glob('img/pets/'.$petID.'.*')[0])) {
             return glob('img/pets/'.$petID.'.*')[0];
@@ -261,6 +258,7 @@ class Pet {
         }
     }
 
+    // Zoekt alle gegevens van de huisdier die bij een gebruiker hoort
     public function getPet(){
         $bind = array(
             1 => array(
@@ -275,6 +273,7 @@ class Pet {
         return $this->query->getQuery("SELECT * FROM pet WHERE petID = :petID AND userID = :userID", $bind);
     }
 
+    // Geeft alle huisdieren van een gebruiker terug
     public function getUserPets(){
         $bind = array(
             1 => array(
@@ -285,10 +284,12 @@ class Pet {
         return $this->query->getQuery("SELECT * FROM pet WHERE userID = :userID", $bind, $fetchAll = true);
     }
 
+    // Geeft alle rassen terug
     function getBreeds() {
         return $this->query->getQuery("SELECT * FROM breed", $bind=array(), $fetchAll = true);
     }
 
+    // Geeft de naam vaan ras terug die gekoppeld staat een een breedID
     function getBreedByID($breedID){
         $bind = array(
             1 => array(
@@ -300,6 +301,11 @@ class Pet {
     }
 }
 
+// Een class waar alle gegevens van een afspraak in staat
+// State 0 = aanvraag
+// State 1 = ingepland
+// State 2 = afgerond
+
 class Appointment {
     private $petID;
     private $query;
@@ -309,7 +315,7 @@ class Appointment {
         $this->query = new Query;
     }
 
-
+    // Geeft alle opkomende afspraken terug
     public function getUpcoming() {
         $bind = array(
             1 => array(
@@ -320,6 +326,7 @@ class Appointment {
         return $this->query->getQuery("SELECT * FROM appointment a WHERE (a.state = 0 OR a.state = 1) AND petID = :petID", $bind, $fetchAll = true);
     }
 
+    // Geeft alle afspraken terug die zijn afgerond
     public function getPast(){
         $bind = array(
             1 => array(
@@ -330,6 +337,7 @@ class Appointment {
         return $this->query->getQuery("SELECT * FROM appointment a WHERE a.state = 2 AND petID = :petID", $bind, $fetchAll = true);
     }
 
+    // Geeft alle afspraken terug los van hun status
     public function getAllAppointments(){
         $bind = array(
             1 => array(
@@ -342,6 +350,7 @@ class Appointment {
 
 }
 
+// Een class waar alle behandelingen in staan
 class Treatment {
     private $petID;
     private $query;
@@ -353,6 +362,7 @@ class Treatment {
         $this->user = new User;
     }
 
+    // Maakt gebruik van een koppeltabel om alle behandelingen bij een afgeronde afspraak op te halen - gekoppeld aan een huisdier
     public function getAllData(){
         $bind = array(
             1 => array(
@@ -366,6 +376,7 @@ class Treatment {
                                                 WHERE a.state = 2 AND petID = :petID", $bind, $fetchAll = true);
     }
 
+    // Geeft alle behandelingen terug
     public function getAllTreatments(){
         return $this->query->getQuery("SELECT * FROM treatment", 0, 1);
     }
@@ -373,6 +384,8 @@ class Treatment {
 
 }
 
+
+// Een class voor de admin gedeelte van de applicatie
 class Admin {
     private $query;
     private $user;
@@ -382,6 +395,7 @@ class Admin {
         $this->user = new User;
     }
 
+    // Deze functie zorgt er voor dat alle gebruikers die geen admin zijn terug worden gestuurd
     public function securePage(){
         if (!$this->user->getRole()) {
             header("Location: /");
@@ -389,41 +403,31 @@ class Admin {
         }
     }
 
+
+    // Geeft alle data van een afspraak terug gebonden aan de id
+    public function getAppointment($appointmentID) {
+        $bind = array(
+            1 => array (
+                'key' => 'appointmentID',
+                'value' => $appointmentID
+            )
+        );
+        return $this->query->getQuery("SELECT * FROM appointment WHERE appointmentID = :appointmentID", $bind, 0);
+    }
+
+    // Geeft alle afspraken van vandaag terug
+    public function getTodayAppointments(){
+        return $this->query->getQuery("SELECT * FROM appointment WHERE state = 1 AND DATE(date) = CURDATE()", 0, 1);
+    }
+
+
+    // Geeft alle afspraak verzoeken terug
     public function getAppointmentRequests() {
         return $this->query->getQuery("SELECT * FROM appointment WHERE state = 0", $bind= array(), $fetchAll = true);
 
     }
 
-    public function getTodayAppointments(){
-        return $this->query->getQuery("SELECT * FROM appointment WHERE state = 1 AND DATE(date) = CURDATE()", 0, 1);
-    }
-
-    public function getAllUsers(){
-        return $this->query->getQuery("SELECT * FROM user WHERE role = 0", 0, 1);
-    }
-
-    public function getUserData($userID) {
-        $bind = array(
-            1 => array (
-                'key' => 'userID',
-                'value' => $userID
-            )
-        );
-        return $this->query->getQuery("SELECT * FROM user WHERE userID = :userID", $bind, 0);
-
-    }
-
-    public function getAllPetsFromUser($userID){
-        $bind = array(
-            1 => array (
-                'key' => 'userID',
-                'value' => $userID
-            )
-        );
-
-        return $this->query->getQuery("SELECT * FROM pet WHERE userID = :userID", $bind, 1);
-    }
-
+    // Geeft alle data van een afspraak verzoek terug
     public function getAppointmentRequest($appointmentID) {
         $bind = array(
             1 => array (
@@ -434,6 +438,30 @@ class Admin {
         return $this->query->getQuery("SELECT * FROM appointment WHERE appointmentID = :appointmentID", $bind, 0);
     }
 
+
+    // Geeft alle data terug van goedgekeurde afspraken die niet vandaag plaatsvinden
+    public function getAllPlannedAppointments(){
+        return $this->query->getQuery("SELECT * FROM appointment WHERE state = 1 AND DATE(date) > CURDATE()",0, 1);
+    }
+
+    // Geeft alle gebruikers terug die geen admin zijn
+    public function getAllUsers(){
+        return $this->query->getQuery("SELECT * FROM user WHERE role = 0", 0, 1);
+    }
+
+    // Geeft alle data van een gebruiker terug
+    public function getUserData($userID) {
+        $bind = array(
+            1 => array (
+                'key' => 'userID',
+                'value' => $userID
+            )
+        );
+        return $this->query->getQuery("SELECT * FROM user WHERE userID = :userID", $bind, 0);
+    }
+
+
+    // Geeft alle data van een gebruiker terug die gekoppeld is aan een huisdier
     public function getUserByPetID($petID) {
         $bind = array(
             1 => array (
@@ -446,27 +474,25 @@ class Admin {
                                                 WHERE p.petID = :petID", $bind, 0);
     }
 
-    public function getAppointment($appointmentID) {
+    // Geeft alle huisdieren van een gebruiker terug
+    public function getAllPetsFromUser($userID){
         $bind = array(
             1 => array (
-                'key' => 'appointmentID',
-                'value' => $appointmentID
+                'key' => 'userID',
+                'value' => $userID
             )
         );
-        return $this->query->getQuery("SELECT * FROM appointment WHERE appointmentID = :appointmentID", $bind, 0);
-    }
-
-    public function getAllPlannedAppointments(){
-        return $this->query->getQuery("SELECT * FROM appointment WHERE state = 1 AND DATE(date) > CURDATE()",0, 1);
+        return $this->query->getQuery("SELECT * FROM pet WHERE userID = :userID", $bind, 1);
     }
 
 }
 
+// Een set aan standaard objecten voor herbruik
 $queryObj = new Query();
 $pageObj = new Page();
 $userObj = new User();
 
-// Check if user is permitted to be here
+// Zorgt er voor dat een gebruiker alleen bij kan waar hij bij mag
 foreach ($queryObj->getQuery("SELECT * FROM menu", $bind=array(), $fetchAll = true) as $menu_all) {
     if ($menu_all['slug'] == $pageObj->getPageSlug()) {
         if ($menu_all['secured'] && !$userObj->getUserID()) {

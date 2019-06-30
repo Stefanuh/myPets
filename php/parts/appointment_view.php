@@ -1,39 +1,34 @@
-<?
-
+<?php
 require_once "../../functions.php";
-
 $admin = new Admin;
 $treatments = new Treatment();
 $appointmentID = $_POST['appointmentID'];
 $pet = new Pet($admin->getAppointmentRequest($appointmentID)['petID']);
-
 ?>
-
 <div class="form-group">
     <label for="name">Reden afspraak</label>
-    <input type="text" id="appointmentView_name" class="form-control" value="<?php echo $admin->getAppointment($appointmentID)['name'] ?>" required>
+    <input type="text" id="appointmentView_name" class="form-control"
+           value="<?php echo $admin->getAppointment($appointmentID)['name'] ?>" required>
 </div>
-
 <div class="form-group">
     <label for="datepicker">Datum</label>
-    <input type="text" id="appointmentView_date" class="form-control datetimepicker" value="<?php echo date_format(date_create($admin->getAppointment($appointmentID)['date']),"d-m-Y H:i" ); ?>" readonly="readonly">
+    <input type="text" id="appointmentView_date" class="form-control datetimepicker"
+           value="<?php echo date_format(date_create($admin->getAppointment($appointmentID)
+           ['date']),"d-m-Y H:i" ); ?>" readonly="readonly">
 </div>
-
-
 <div class="form-group">
     <label for="name">Extra informatie</label>
-    <textarea id="appointmentView_description" class="form-control" aria-label="With textarea"><?php echo $admin->getAppointment($appointmentID)['description'] ?></textarea>
+    <textarea id="appointmentView_description" class="form-control" aria-label="With textarea">
+        <?php echo $admin->getAppointment($appointmentID)['description'] ?></textarea>
 </div>
-
 <div class="form-group">
     <label for="appointmentView_treatment">Behandelingen:</label>
-    <select class="select_mul" id="appointmentView_treatment" name="appointmentView_treatment[]" multiple="multiple" >
+    <select class="select_mul" id="appointmentView_treatment" name="appointmentView_treatment[]" multiple="multiple">
         <?php foreach($treatments->getAllTreatments() as $treatment) : ?>
         <option value="<?php echo $treatment['treatmentID'] ?>"><?php echo $treatment['name'] ?></option>
         <?php endforeach; ?>
     </select>
 </div>
-
 <div class="appointmentInfo">
     <table class="table">
         <tbody>
@@ -52,19 +47,20 @@ $pet = new Pet($admin->getAppointmentRequest($appointmentID)['petID']);
         </tr>
         <tr>
             <th scope="row">Geboortedatum</th>
-            <td><?php echo date_format(date_create($admin->getUserByPetID($admin->getAppointmentRequest($appointmentID)['petID'])['birth']), "d M Y") ?></td>
+            <td><?php echo date_format(date_create($admin->getUserByPetID($admin->getAppointmentRequest($appointmentID)
+                ['petID'])['birth']), "d M Y") ?>
+            </td>
         </tr>
         </tbody>
     </table>
 </div>
-
 <div class="modal-footer">
-    <button type="button" class="btn btn-danger removeAppointment" data-appointmentid="<?php echo $appointmentID ?>">Verwijder afspraak</button>
+    <button type="button" class="btn btn-danger removeAppointment" data-appointmentid="<?php echo $appointmentID ?>">
+        Verwijder afspraak
+    </button>
     <button type="button" id="appointmentViewSubmit" class="btn btn-success">Opslaan</button>
 </div>
-
 <script>
-
     $(".datetimepicker").datetimepicker({
         controlType: 'select',
         oneLine: true,
@@ -86,25 +82,18 @@ $pet = new Pet($admin->getAppointmentRequest($appointmentID)['petID']);
             description: document.getElementById('appointmentView_description'),
         };
 
-        console.log()
-
-        // Clear all messages first
         while (form.messages.firstChild) form.messages.removeChild(form.messages.firstChild);
-
         let messageList = [];
         let error = false;
 
-        // Check if name is empty
         if (form.name.value === "") {
             messageList.push("Voer aub de reden in van de afspraak");
             error = true;
         }
-
         if (form.date.value === "") {
             messageList.push("Voer aub een datum in");
             error = true;
         }
-
         if ($("#appointmentView_treatment").val().length === 0) {
             messageList.push("Voer aub minstens één behandeling in");
             error = true;
@@ -127,24 +116,24 @@ $pet = new Pet($admin->getAppointmentRequest($appointmentID)['petID']);
             if (form.description.value !== "") formData.append('description', form.description.value);
 
             fetch(url, {method: 'POST', body: formData})
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (responseObject) {
-                    if (responseObject.ok) {
-                        location.reload();
-                    } else {
-                        console.log(responseObject);
-                        while (form.messages.firstChild) form.messages.removeChild(form.messages.firstChild);
-                        responseObject.message.forEach((message) => {
-                            const li = document.createElement('div');
-                            li.className = 'alert alert-danger';
-                            li.textContent = message;
-                            form.messages.appendChild(li);
-                        });
-                        form.message.style.display = "block";
-                    }
-                });
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (responseObject) {
+                if (responseObject.ok) {
+                    location.reload();
+                } else {
+                    console.log(responseObject);
+                    while (form.messages.firstChild) form.messages.removeChild(form.messages.firstChild);
+                    responseObject.message.forEach((message) => {
+                        const li = document.createElement('div');
+                        li.className = 'alert alert-danger';
+                        li.textContent = message;
+                        form.messages.appendChild(li);
+                    });
+                    form.message.style.display = "block";
+                }
+            });
         }
     });
 
@@ -164,5 +153,4 @@ $pet = new Pet($admin->getAppointmentRequest($appointmentID)['petID']);
             })
         }
     });
-
 </script>

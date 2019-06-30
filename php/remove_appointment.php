@@ -11,4 +11,3 @@ $bind = array (
     )
 );
 $query->setQuery("DELETE FROM appointment WHERE appointmentID = :appointmentID", $bind);
-

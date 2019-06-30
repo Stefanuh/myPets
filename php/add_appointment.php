@@ -13,7 +13,6 @@ $message = array();
 $ok = true;
 $insertQuery = new Query();
 
-
 if (!empty($phone)) {
     $bind = array (
         1 => array (
@@ -27,7 +26,6 @@ if (!empty($phone)) {
     );
     $insert = $insertQuery->setQuery("UPDATE user SET phone = :phone WHERE userID = :userID", $bind);
 }
-
 
 $bind = array (
     1 => array (
@@ -48,8 +46,8 @@ $bind = array (
     )
 
 );
-
-$insert = $insertQuery->setQuery("INSERT INTO appointment (name, description, date, petID) VALUES (:name, :description, :date, :petID)", $bind);
+$insert = $insertQuery->setQuery("INSERT INTO appointment (name, description, date, petID) 
+VALUES (:name, :description, :date, :petID)", $bind);
 
 echo json_encode(
     array(

@@ -1,16 +1,14 @@
 <?php
     require_once "head.php";
     $admin = new Admin;
+    // Checkt of de gebruiker admin is
     $admin->securePage();
 ?>
 
 <main id="appointment">
     <div class="container">
-
         <div class="row">
-
             <div class="card" style="width: 100%">
-
                 <div class="card-header">
                     <nav id="adminNav" class="nav nav-tabs card-header-tabs" role="tablist">
                         <a class="nav-item nav-link active" id="nav-appointment-tab" data-toggle="tab" href="#nav-appointment" role="tab" aria-controls="nav-appointment" aria-selected="true">Vandaag <span class="badge badge-success"><?php echo count($admin->getTodayAppointments()) ?></span></a>
@@ -21,8 +19,8 @@
                 </div>
                 <div class="card-body">
                     <div class="tab-content" id="nav-tabContent">
-
-                        <div class="tab-pane fade show active" id="nav-appointment" role="tabpanel" aria-labelledby="nav-appointment-tab">
+                        <div class="tab-pane fade show active" id="nav-appointment" role="tabpanel"
+                             aria-labelledby="nav-appointment-tab">
                         <?php if ($admin->getTodayAppointments()) : ?>
                             <div class="list-group">
                             <?php foreach ($admin->getTodayAppointments() as $appointmentToday) : ?>
@@ -32,80 +30,75 @@
                                         data-id="<?php echo $appointmentToday['appointmentID'] ?>"
                                         class="list-group-item list-group-item-action appointmentViewBtn">
                                     <span class="badge badge-success">
-                                        <?php echo date_format(date_create($appointmentToday['date']), "H:i"); ?>
+                                        <?php echo date_format(
+                                                date_create($appointmentToday['date']), "H:i"); ?>
                                     </span>
                                     <span class="name"><?php echo $pet->getName() ?></span>
                                     <span class="title"><?php echo $appointmentToday['name'] ?></span>
                                 </button>
-
                             <?php endforeach; ?>
                             </div>
                         <?php else : ?>
                             Er staan voor vandaag geen afspraken meer gepland
                         <?php endif; ?>
                         </div>
-
                         <div class="tab-pane fade" id="nav-treatment" role="tabpanel"
                              aria-labelledby="nav-treatment-tab">
                             <?php if ($admin->getAppointmentRequests()) : ?>
-                                <div class="list-group">
-                                    <?php foreach ($admin->getAppointmentRequests() as $appointmentRequest) : ?>
+                            <div class="list-group">
+                                <?php foreach ($admin->getAppointmentRequests() as $appointmentRequest) : ?>
                                     <?php $pet = new Pet($appointmentRequest['petID']); ?>
-                                    <button id="appointmentRequestBtn-<?php echo $appointmentRequest['appointmentID']?>"
+                                <button id="appointmentRequestBtn-
+                                    <?php echo $appointmentRequest['appointmentID']?>"
                                             data-toggle="modal" data-target="#appointmentRequest"
                                             data-id="<?php echo $appointmentRequest['appointmentID'] ?>"
                                             class="list-group-item list-group-item-action appointmentRequestBtn">
-                                        <span class="badge badge-primary">
-                                        <?php echo date_format(date_create($appointmentRequest['date']),
-                                            "d M"); ?>
-                                        </span>
-                                        <span class="name"><?php echo $pet->getName() ?></span>
-                                        <span class="title"><?php echo $appointmentRequest['name'] ?></span>
-                                    </button>
-
-                                    <?php endforeach; ?>
-                                </div>
+                                    <span class="badge badge-primary">
+                                    <?php echo date_format(date_create($appointmentRequest['date']),
+                                    "d M"); ?>
+                                    </span>
+                                    <span class="name"><?php echo $pet->getName() ?></span>
+                                    <span class="title"><?php echo $appointmentRequest['name'] ?></span>
+                                </button>
+                                <?php endforeach; ?>
+                            </div>
                             <?php else : ?>
                                 Er zijn geen nieuwe aanvragen
                             <?php endif; ?>
                         </div>
-
                         <div class="tab-pane fade" id="nav-allappointments" role="tabpanel"
                              aria-labelledby="nav-allappointments-tab">
                             <?php if ($admin->getAllPlannedAppointments()) : ?>
-                                <div class="list-group">
-                                    <?php foreach ($admin->getAllPlannedAppointments() as $appointmentAll) : ?>
-                                        <?php $pet = new Pet($appointmentAll['petID']); ?>
-                                        <button id="appointmentRequestBtn-<?php echo $appointmentAll['appointmentID']?>"
-                                                data-toggle="modal" data-target="#appointmentRequest"
-                                                data-id="<?php echo $appointmentAll['appointmentID'] ?>"
-                                                class="list-group-item list-group-item-action appointmentRequestBtn">
-                                        <span class="badge badge-primary">
-                                        <?php echo date_format(date_create($appointmentAll['date']),
-                                            "d M"); ?>
-                                        </span>
-                                            <span class="name"><?php echo $pet->getName() ?></span>
-                                            <span class="title"><?php echo $appointmentAll['name'] ?></span>
-                                        </button>
-
-                                    <?php endforeach; ?>
-                                </div>
+                            <div class="list-group">
+                                <?php foreach ($admin->getAllPlannedAppointments() as $appointmentAll) : ?>
+                                <?php $pet = new Pet($appointmentAll['petID']); ?>
+                                <button id="appointmentRequestBtn-
+                                    <?php echo $appointmentAll['appointmentID']?>"
+                                        data-toggle="modal" data-target="#appointmentRequest"
+                                        data-id="<?php echo $appointmentAll['appointmentID'] ?>"
+                                        class="list-group-item list-group-item-action appointmentRequestBtn">
+                                    <span class="badge badge-primary">
+                                    <?php echo date_format(date_create($appointmentAll['date']),
+                                        "d M"); ?>
+                                    </span>
+                                    <span class="name"><?php echo $pet->getName() ?></span>
+                                    <span class="title"><?php echo $appointmentAll['name'] ?></span>
+                                </button>
+                                <?php endforeach; ?>
+                            </div>
                             <?php else : ?>
                                 Er zijn geen nieuwe aanvragen
                             <?php endif; ?>
                         </div>
-
                     </div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
 </main>
-
-<div class="modal fade" id="appointmentView" tabindex="-1" role="dialog" aria-labelledby="appointmentView" aria-hidden="true">
+<!-- Modals -->
+<div class="modal fade" id="appointmentView" tabindex="-1" role="dialog" aria-labelledby="appointmentView"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -123,8 +116,8 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="appointmentRequest" tabindex="-1" role="dialog" aria-labelledby="appointmentRequest" aria-hidden="true">
+<div class="modal fade" id="appointmentRequest" tabindex="-1" role="dialog" aria-labelledby="appointmentRequest"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -135,17 +128,16 @@
             </div>
             <div class="modal-body">
                 <form id="appointmentRequestForm" method="POST" action="php/update_appointment.php">
-
                     <div id="appointmentRequestMessage"></div>
                     <div id="appointmentRequestData"></div>
-
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="appointmentCreate" tabindex="-1" role="dialog" aria-labelledby="appointmentCreate" aria-hidden="true">
+<div class="modal fade" id="appointmentCreate" tabindex="-1" role="dialog" aria-labelledby="appointmentCreate"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -157,62 +149,55 @@
             <div class="modal-body">
                 <form id="appointmentCreateForm">
                     <div id="appointmentCreateMessage"></div>
-
                     <div class="form-group">
                         <label for="user">Klant</label>
                         <select name="user" id="appointmentCreate_user" class="form-control select" required>
                             <?php foreach ($admin->getAllUsers() as $user) : ?>
-                                <option value="<?php echo $user['userID'] ?>"><?php echo $user['firstName']." ".$user['lastName'] ?></option>
+                                <option value="<?php echo $user['userID'] ?>">
+                                    <?php echo $user['firstName']." ".$user['lastName'] ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label for="pet">Huisdier</label>
                         <select name="pet" id="appointmentCreate_pet" class="form-control select" required>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label for="name">Reden afspraak</label>
                         <input type="text" class="form-control" id="appointmentCreate_name" required>
                     </div>
-
                     <div class="form-group">
                         <label for="datepicker">Datum</label>
-                        <input type="text" id="appointmentCreate_date" class="form-control datetimepicker" value="" readonly="readonly">
+                        <input type="text" id="appointmentCreate_date" class="form-control datetimepicker" value=""
+                               readonly="readonly">
                     </div>
-
                     <div class="form-group" id="phoneElement">
                         <label for="name">Telefoonnummer</label>
                         <input type="text" id="appointmentCreate_phone" class="form-control" max="10" required>
                     </div>
-
                     <div class="form-group">
                         <label for="name">Extra informatie</label>
-                        <textarea  name="description" id="appointmentCreate_description" class="form-control" aria-label="With textarea"></textarea>
+                        <textarea  name="description" id="appointmentCreate_description" class="form-control"
+                                   aria-label="With textarea"></textarea>
                     </div>
-
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuleren</button>
-                        <button type="button" name="submitAppointment" id="appointmentCreateSubmit" class="btn btn-success">Maak afspraak</button>
+                        <button type="button" name="submitAppointment" id="appointmentCreateSubmit"
+                                class="btn btn-success">Maak afspraak</button>
                     </div>
-
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-
 <?php require_once "footer.php" ?>
-
 <script src="js/jquery-ui-timepicker-addon.js"></script>
 <script src="js/jquery-ui-timepicker-nl.js"></script>
 <link rel="stylesheet" href="css/jquery-ui-timepicker-addon.css">
-
 <script>
-
+    // Slaat de huidige tap op (ivm refresh)
     $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
         localStorage.setItem('activeTab', $(e.target).attr('href'));
     });
@@ -220,9 +205,8 @@
     if(activeTab) $('#adminNav a[href="' + activeTab + '"]').tab('show');
 
     $('#appointmentCreate_user').val("");
-
-    // Get all the pets that belong to a selected user
     $('#appointmentCreate_user').change(function() {
+        // Haalt alle huisdieren van een gekozen gebruiker op
         $.ajax({
             type: 'POST',
             url: 'php/parts/pet_by_userID.php',
@@ -231,7 +215,7 @@
                 $('#appointmentCreate_pet').html(data);
             }
         });
-
+        // Haalt de telefoonnummer van een gekozen gebruiker op
         $.ajax({
             type: 'POST',
             url: 'php/parts/appointment_new_phone.php',
@@ -252,12 +236,10 @@
             date: document.getElementById('appointmentCreate_date'),
             description: document.getElementById('appointmentCreate_description'),
         };
-
+        // Aparte constant voor de telefoonnummer
         const phone = document.getElementById('appointmentCreate_phone');
 
-        // Clear all messages first
         while (form.messages.firstChild) form.messages.removeChild(form.messages.firstChild);
-
         let messageList = [];
         let error = false;
 
@@ -265,22 +247,18 @@
             messageList.push("Kies aub een gebruiker");
             error = true;
         }
-
         if (form.pet.value === "") {
             messageList.push("Kies aub een huisdier");
             error = true;
         }
-
         if (form.name.value === "") {
             messageList.push("Voer aub een reden voor de afspraak in");
             error = true;
         }
-
         if (form.date.value === "") {
             messageList.push("Voer aub een datum in");
             error = true;
         }
-
         if (phone.value === "") {
             messageList.push("Voer aub een telefoonnummer in");
             error = true;
@@ -304,28 +282,27 @@
             if (form.description.value !== "") formData.append('description', form.description.value);
 
             fetch(url, {method: 'POST', body: formData})
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (responseObject) {
-                    if (responseObject.ok) {
-                        location.reload();
-                    } else {
-                        console.log(responseObject);
-                        while (form.messages.firstChild) form.messages.removeChild(form.messages.firstChild);
-                        responseObject.message.forEach((message) => {
-                            const li = document.createElement('div');
-                            li.className = 'alert alert-danger';
-                            li.textContent = message;
-                            form.messages.appendChild(li);
-                        });
-                        form.message.style.display = "block";
-                    }
-                });
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (responseObject) {
+                if (responseObject.ok) {
+                    location.reload();
+                } else {
+                    console.log(responseObject);
+                    while (form.messages.firstChild) form.messages.removeChild(form.messages.firstChild);
+                    responseObject.message.forEach((message) => {
+                        const li = document.createElement('div');
+                        li.className = 'alert alert-danger';
+                        li.textContent = message;
+                        form.messages.appendChild(li);
+                    });
+                    form.message.style.display = "block";
+                }
+            });
         }
     });
-
-    // Create the data for a appointment that is today
+    // Laad de data voor de gekozen afpraak in (tab: vandaag)
     $('.appointmentViewBtn').click(function() {
         $.ajax({
             type: 'POST',
@@ -337,8 +314,7 @@
             }
         });
     });
-
-    // Create the data for a appointment request
+    // Laad de data voor de gekozen afspraak in (tab: verzoeken)
     $('.appointmentRequestBtn').click(function() {
         $.ajax({
             type: 'POST',
@@ -350,7 +326,4 @@
             }
         });
     });
-
-
-
 </script>

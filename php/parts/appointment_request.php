@@ -1,44 +1,45 @@
 <?php
     require_once "../../functions.php";
-
     $admin = new Admin;
     $appointmentID = $_POST['appointmentID'];
     $pet = new Pet($admin->getAppointmentRequest($appointmentID)['petID']);
-
-    ?>
-
+?>
 <input type="hidden" name="appointmentID" value="<?php echo $_POST['appointmentID'] ?>"
-
 <div class="form-group">
     <label for="name">Reden afspraak</label>
-    <input type="text" name="name" class="form-control" id="name" value="<?php echo $admin->getAppointmentRequest($appointmentID)['name']; ?>" required>
+    <input type="text" name="name" class="form-control" id="name"
+           value="<?php echo $admin->getAppointmentRequest($appointmentID)['name']; ?>" required>
 </div>
-
 <div class="form-group">
     <label for="datepicker">Datum</label>
-    <input type="text" name="date" class="form-control datetimepicker"  value="<?php echo  date_format(date_create($admin->getAppointmentRequest($appointmentID)['date']), 'd-m-Y H:i');  ?>" readonly="readonly">
+    <input type="text" name="date" class="form-control datetimepicker"
+           value="<?php echo  date_format(
+                   date_create($admin->getAppointmentRequest($appointmentID)['date']), 'd-m-Y H:i');  ?>"
+           readonly="readonly">
 </div>
-
 <div class="form-group">
     <label for="name">Extra informatie</label>
-    <textarea name="description" id="description" class="form-control" aria-label="With textarea"> <?php echo $admin->getAppointmentRequest($appointmentID)['description']; ?></textarea>
+    <textarea name="description" id="description" class="form-control" aria-label="With textarea">
+        <?php echo $admin->getAppointmentRequest($appointmentID)['description']; ?></textarea>
 </div>
-
 <div class="appointmentInfo">
     <table class="table">
         <tbody>
         <tr>
             <th scope="row">Eigenaar</th>
             <td><?php echo $admin->getUserByPetID($admin->getAppointmentRequest($appointmentID)['petID'])['firstName'].
-                    " ".$admin->getUserByPetID($admin->getAppointmentRequest($appointmentID)['petID'])['lastName'] ?></td>
+                    " ".$admin->getUserByPetID($admin->getAppointmentRequest($appointmentID)['petID'])['lastName'] ?>
+            </td>
         </tr>
         <tr>
             <th scope="row">Telefoon</th>
-            <td><?php echo $admin->getUserByPetID($admin->getAppointmentRequest($appointmentID)['petID'])['phone'] ?></td>
+            <td><?php echo $admin->getUserByPetID($admin->getAppointmentRequest($appointmentID)['petID'])['phone'] ?>
+            </td>
         </tr>
         <tr>
             <th scope="row">Huisdier</th>
-            <td><?php echo $admin->getUserByPetID($admin->getAppointmentRequest($appointmentID)['petID'])['name'] ?></td>
+            <td><?php echo $admin->getUserByPetID($admin->getAppointmentRequest($appointmentID)['petID'])['name'] ?>
+            </td>
         </tr>
         <tr>
             <th scope="row">Ras</th>
@@ -46,18 +47,22 @@
         </tr>
         <tr>
             <th scope="row">Geboortedatum</th>
-            <td><?php echo date_format(date_create($admin->getUserByPetID($admin->getAppointmentRequest($appointmentID)['petID'])['birth']), "d M Y") ?></td>
-
+            <td><?php echo date_format(
+                    date_create($admin->getUserByPetID($admin->getAppointmentRequest($appointmentID)
+                    ['petID'])['birth']), "d M Y") ?>
+            </td>
         </tr>
         </tbody>
     </table>
 </div>
-
 <div class="modal-footer">
-    <button type="button" class="btn btn-danger removeAppointment" data-appointmentid="<?php echo $appointmentID ?>">Verwijder afspraak</button>
-    <button type="submit" name="submitAppointmentRequest" id="submitAppointmentRequest" class="btn btn-success">Plan afspraak in</button>
+    <button type="button" class="btn btn-danger removeAppointment" data-appointmentid="<?php echo $appointmentID ?>">
+        Verwijder afspraak
+    </button>
+    <button type="submit" name="submitAppointmentRequest" id="submitAppointmentRequest" class="btn btn-success">
+        Plan afspraak in
+    </button>
 </div>
-
 <script>
     $(".datetimepicker").datetimepicker({
         controlType: 'select',
@@ -69,8 +74,6 @@
         stepMinute: 15,
         minDate: 1,
     });
-
-
     $('.removeAppointment').click(function() {
         const confirmDelete = confirm("Weet u zeker dat deze afspraak verwijdert moet worden?");
         const appointmentID = $(this).data('appointmentid');

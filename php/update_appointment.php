@@ -1,11 +1,11 @@
 <?php
 
 require_once "../functions.php";
+
 $appointmentID = !empty($_POST['appointmentID']) ? trim($_POST['appointmentID']) : null;
 $name = !empty($_POST['name']) ? trim($_POST['name']) : null;
 $description = !empty($_POST['description']) ? trim($_POST['description']) : null;
 $date = date("Y-m-d H:i", strtotime(!empty($_POST['date']) ? trim($_POST['date']) : null));
-
 $query = new Query;
 
 $bind = array (
@@ -30,4 +30,3 @@ $bind = array (
 $query->setQuery("UPDATE appointment SET name = :name, description = :description, date = :date, state = 1 WHERE appointmentID = :appointmentID", $bind);
 
 header("Location: /");
-exit();
