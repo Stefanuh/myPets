@@ -26,7 +26,9 @@
                             <div class="list-group">
                             <?php foreach ($admin->getTodayAppointments() as $appointmentToday) : ?>
                                 <?php $pet = new Pet($appointmentToday['petID']); ?>
-                                <button data-toggle="modal" data-target="#appointmentView" data-id="<?php echo $appointmentToday['appointmentID'] ?>"
+                                <button id="appointmentViewBtn-<?php echo $appointmentToday['appointmentID']?>"
+                                        data-toggle="modal" data-target="#appointmentView"
+                                        data-id="<?php echo $appointmentToday['appointmentID'] ?>"
                                         class="list-group-item list-group-item-action appointmentViewBtn">
                                     <span class="badge badge-success">
                                         <?php echo date_format(date_create($appointmentToday['date']), "H:i"); ?>
@@ -48,7 +50,9 @@
                                 <div class="list-group">
                                     <?php foreach ($admin->getAppointmentRequests() as $appointmentRequest) : ?>
                                     <?php $pet = new Pet($appointmentRequest['petID']); ?>
-                                    <button data-toggle="modal" data-target="#appointmentRequest" data-id="<?php echo $appointmentRequest['appointmentID'] ?>"
+                                    <button id="appointmentRequestBtn-<?php echo $appointmentRequest['appointmentID']?>"
+                                            data-toggle="modal" data-target="#appointmentRequest"
+                                            data-id="<?php echo $appointmentRequest['appointmentID'] ?>"
                                             class="list-group-item list-group-item-action appointmentRequestBtn">
                                         <span class="badge badge-primary">
                                         <?php echo date_format(date_create($appointmentRequest['date']),
@@ -108,10 +112,6 @@
                     <div id="appointmentRequestMessage"></div>
                     <div id="appointmentRequestData"></div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-delete="modal">Verwijder afspraak</button>
-                        <button type="submit" name="submitAppointmentRequest" id="submitAppointmentRequest" class="btn btn-success">Plan afspraak in</button>
-                    </div>
                 </form>
             </div>
         </div>
@@ -323,6 +323,7 @@
             }
         });
     });
+
 
 
 </script>

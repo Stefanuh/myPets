@@ -54,7 +54,7 @@ $appointmentID = $_POST['appointmentID'];
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-danger appointmentDelete" data-delete="<?php echo $appointmentID ?>">Verwijder afspraak</button>
+    <button type="button" class="btn btn-danger removeAppointment" data-appointmentid="<?php echo $appointmentID ?>">Verwijder afspraak</button>
     <button type="button" id="appointmentViewSubmit" class="btn btn-success">Opslaan</button>
 </div>
 
@@ -143,5 +143,21 @@ $appointmentID = $_POST['appointmentID'];
         }
     });
 
+    $('.removeAppointment').click(function() {
+        const confirmDelete = confirm("Weet u zeker dat deze afspraak verwijdert moet worden?");
+        const appointmentID = $(this).data('appointmentid');
+        let appointmentBtn = $('#appointmentViewBtn-'+appointmentID);
+        if (confirmDelete) {
+            $.ajax({
+                type: 'POST',
+                url: 'php/remove_appointment.php',
+                data: { appointmentID: appointmentID },
+                success: function() {
+                    $('#appointmentView').modal('toggle');
+                    appointmentBtn.remove();
+                }
+            })
+        }
+    });
 
 </script>

@@ -3,11 +3,7 @@
 
     $admin = new Admin;
     $appointmentID = $_POST['appointmentID'];
-
 ?>
-
-<script src="../../js/jquery-ui-timepicker-addon.js"></script>
-<script src="../../js/jquery-ui-timepicker-nl.js"></script>
 
 <input type="hidden" name="appointmentID" value="<?php echo $_POST['appointmentID'] ?>"
 
@@ -50,3 +46,39 @@
         </tbody>
     </table>
 </div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger removeAppointment" data-appointmentid="<?php echo $appointmentID ?>">Verwijder afspraak</button>
+    <button type="submit" name="submitAppointmentRequest" id="submitAppointmentRequest" class="btn btn-success">Plan afspraak in</button>
+</div>
+
+<script>
+    $(".datetimepicker").datetimepicker({
+        controlType: 'select',
+        oneLine: true,
+        timeFormat: 'HH:mm',
+        showButtonPanel: false,
+        hourMin: 9,
+        hourMax: 19,
+        stepMinute: 15,
+        minDate: 1,
+    });
+
+
+    $('.removeAppointment').click(function() {
+        const confirmDelete = confirm("Weet u zeker dat deze afspraak verwijdert moet worden?");
+        const appointmentID = $(this).data('appointmentid');
+        let appointmentBtn = $('#appointmentRequestBtn-'+appointmentID);
+        if (confirmDelete) {
+            $.ajax({
+                type: 'POST',
+                url: 'php/remove_appointment.php',
+                data: { appointmentID: appointmentID },
+                success: function() {
+                    $('#appointmentRequest').modal('toggle');
+                    appointmentBtn.remove();
+                }
+            })
+        }
+    });
+</script>
