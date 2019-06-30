@@ -101,7 +101,7 @@
             .then(function (responseObject) {
                 // Als registreren gelukt is dan refreshen
                 if (responseObject.ok) {
-                    location.reload();
+                    window.location = '/login';
                 } else {
                     // Zo niet toon dan foutmeldingen
                     while(form.messages.firstChild) form.messages.removeChild(form.messages.firstChild);

@@ -14,7 +14,7 @@
                 <?php endforeach; ?>
                 <?php if (!empty($userObj->getUserID())) : ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php root ?>/php/logout.php">Logout</a>
+                    <a class="nav-link" href="<?php root ?>/php/logout.php">Log uit</a>
                 </li>
                 <?php endif; ?>
             </ul>
