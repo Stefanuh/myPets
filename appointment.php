@@ -87,7 +87,7 @@
                                 <?php endforeach; ?>
                             </div>
                             <?php else : ?>
-                                Er zijn geen nieuwe aanvragen
+                                Er zijn ingeplande afspraken
                             <?php endif; ?>
                         </div>
                     </div>
