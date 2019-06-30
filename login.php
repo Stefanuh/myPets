@@ -42,6 +42,9 @@
 <?php require_once "footer.php" ?>
 
 <script>
+    localStorage.removeItem('activeTab');
+
+
     const form = {
         email: document.getElementById('email'),
         password: document.getElementById('password'),

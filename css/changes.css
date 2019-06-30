@@ -69,6 +69,10 @@ a.ui-state-default {
   border-radius: 3px;
 }
 
+a.ui-state-default.ui-state-active {
+  background: #f44336 !important;
+}
+
 td.ui-datepicker-unselectable.ui-state-disabled .ui-state-default {
   padding: 5px !important;
   text-align: center !important;

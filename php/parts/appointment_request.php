@@ -3,7 +3,9 @@
 
     $admin = new Admin;
     $appointmentID = $_POST['appointmentID'];
-?>
+    $pet = new Pet($admin->getAppointmentRequest($appointmentID)['petID']);
+
+    ?>
 
 <input type="hidden" name="appointmentID" value="<?php echo $_POST['appointmentID'] ?>"
 
@@ -14,7 +16,7 @@
 
 <div class="form-group">
     <label for="datepicker">Datum</label>
-    <input type="text" name="date" class="form-control datetimepicker"  value="<?php echo $admin->getAppointmentRequest($appointmentID)['date']; ?>" readonly="readonly">
+    <input type="text" name="date" class="form-control datetimepicker"  value="<?php echo  date_format(date_create($admin->getAppointmentRequest($appointmentID)['date']), 'd-m-Y H:i');  ?>" readonly="readonly">
 </div>
 
 <div class="form-group">
@@ -37,6 +39,10 @@
         <tr>
             <th scope="row">Huisdier</th>
             <td><?php echo $admin->getUserByPetID($admin->getAppointmentRequest($appointmentID)['petID'])['name'] ?></td>
+        </tr>
+        <tr>
+            <th scope="row">Ras</th>
+            <td><?php echo $pet->getBreedByID($pet->getBreedID())['name'] ?></td>
         </tr>
         <tr>
             <th scope="row">Geboortedatum</th>

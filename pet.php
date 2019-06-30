@@ -39,7 +39,13 @@
                                                         <div class="card-header" id="heading<?php echo $appointment['name'] ?>">
                                                             <h5 class="mb-0">
                                                                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapse<?php echo $appointment['appointmentID'] ?>" aria-expanded="true" aria-controls="collapse<?php echo $appointment['appointmentID'] ?>">
-                                                                    Afspraak voor <?php echo date_format(date_create($appointment['date']), "j M Y") ?>
+
+
+                                                                    <?php if (date_format(date_create($appointment['date']), "H") == 0) : ?>
+                                                                    Aanvraag voor <?php echo date_format(date_create($appointment['date']), "j M")?>
+                                                                    <?php else : ?>
+                                                                    Ingepland op <?php echo date_format(date_create($appointment['date']), "j M - H:i")?>
+                                                                    <?php endif; ?>
                                                                 </button>
                                                             </h5>
                                                         </div>
@@ -73,7 +79,7 @@
                                                 <div class="card-header" id="heading<?php echo $appointment['name'] ?>">
                                                     <h5 class="mb-0">
                                                         <button class="btn btn-link" data-toggle="collapse" data-target="#collapse<?php echo $appointment['appointmentID'] ?>" aria-expanded="true" aria-controls="collapse<?php echo $appointment['appointmentID'] ?>">
-                                                            Afspraak van <?php echo date_format(date_create($appointment['date']), "j M Y") ?>
+                                                            <?php echo date_format(date_create($appointment['date']), "j M Y") ?>
                                                         </button>
                                                     </h5>
                                                 </div>

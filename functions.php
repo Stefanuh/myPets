@@ -413,7 +413,6 @@ class Admin {
 
     }
 
-
     public function getAllPetsFromUser($userID){
         $bind = array(
             1 => array (
@@ -455,7 +454,10 @@ class Admin {
             )
         );
         return $this->query->getQuery("SELECT * FROM appointment WHERE appointmentID = :appointmentID", $bind, 0);
+    }
 
+    public function getAllPlannedAppointments(){
+        return $this->query->getQuery("SELECT * FROM appointment WHERE state = 1 AND DATE(date) > CURDATE()",0, 1);
     }
 
 }

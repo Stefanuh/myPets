@@ -15,6 +15,7 @@
                     <nav id="adminNav" class="nav nav-tabs card-header-tabs" role="tablist">
                         <a class="nav-item nav-link active" id="nav-appointment-tab" data-toggle="tab" href="#nav-appointment" role="tab" aria-controls="nav-appointment" aria-selected="true">Vandaag <span class="badge badge-success"><?php echo count($admin->getTodayAppointments()) ?></span></a>
                         <a class="nav-item nav-link" id="nav-treatment-tab" data-toggle="tab" href="#nav-treatment" role="tab" aria-controls="nav-treatment" aria-selected="false">Aanvragen <span class="badge badge-primary"><?php echo count($admin->getAppointmentRequests()) ?></span></a>
+                        <a class="nav-item nav-link" id="nav-allappointments-tab" data-toggle="tab" href="#nav-allappointments" role="tab" aria-controls="nav-allappointments" aria-selected="false">Ingeplande afspraken <span class="badge badge-info"><?php echo count($admin->getAllPlannedAppointments()) ?></span></a>
                         <button type="button" data-toggle="modal" data-target="#appointmentCreate" class="btn btn-outline-primary btn-sm add_appointment">Maak een nieuwe afspraak</button>
                     </nav>
                 </div>
@@ -68,6 +69,32 @@
                                 Er zijn geen nieuwe aanvragen
                             <?php endif; ?>
                         </div>
+
+                        <div class="tab-pane fade" id="nav-allappointments" role="tabpanel"
+                             aria-labelledby="nav-allappointments-tab">
+                            <?php if ($admin->getAllPlannedAppointments()) : ?>
+                                <div class="list-group">
+                                    <?php foreach ($admin->getAllPlannedAppointments() as $appointmentAll) : ?>
+                                        <?php $pet = new Pet($appointmentAll['petID']); ?>
+                                        <button id="appointmentRequestBtn-<?php echo $appointmentAll['appointmentID']?>"
+                                                data-toggle="modal" data-target="#appointmentRequest"
+                                                data-id="<?php echo $appointmentAll['appointmentID'] ?>"
+                                                class="list-group-item list-group-item-action appointmentRequestBtn">
+                                        <span class="badge badge-primary">
+                                        <?php echo date_format(date_create($appointmentAll['date']),
+                                            "d M"); ?>
+                                        </span>
+                                            <span class="name"><?php echo $pet->getName() ?></span>
+                                            <span class="title"><?php echo $appointmentAll['name'] ?></span>
+                                        </button>
+
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else : ?>
+                                Er zijn geen nieuwe aanvragen
+                            <?php endif; ?>
+                        </div>
+
                     </div>
                 </div>
 
@@ -101,7 +128,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Aanvraag</h5>
+                <h5 class="modal-title">Afspraak</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

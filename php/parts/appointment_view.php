@@ -5,6 +5,7 @@ require_once "../../functions.php";
 $admin = new Admin;
 $treatments = new Treatment();
 $appointmentID = $_POST['appointmentID'];
+$pet = new Pet($admin->getAppointmentRequest($appointmentID)['petID']);
 
 ?>
 
@@ -44,6 +45,10 @@ $appointmentID = $_POST['appointmentID'];
         <tr>
             <th scope="row">Huisdier</th>
             <td><?php echo $admin->getUserByPetID($admin->getAppointment($appointmentID)['petID'])['name'] ?></td>
+        </tr>
+        <tr>
+            <th scope="row">Ras</th>
+            <td><?php echo $pet->getBreedByID($pet->getBreedID())['name'] ?></td>
         </tr>
         <tr>
             <th scope="row">Geboortedatum</th>
