@@ -64,8 +64,9 @@
                     <div class="form-group">
                         <label for="breedType">Soort</label>
                         <select name="breedType" id="breedType" class="form-control" required>
-                            <option value="dog">Hond</option>
-                            <option value="cat">Kat</option>
+                            <?php foreach ($petObj->getBreedTypes() as $breedTypes) : ?>
+                                <option value="<?php echo $breedTypes['breedTypeID'] ?>"><?php echo $breedTypes['name'] ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="form-group">
@@ -102,8 +103,14 @@
 <script>
     // Haal de juiste rassen bij de gekozen soort huisdier op
     $( "#breedType" ).change(function() {
-        if ( $(this).val() === 'cat') $( "#breed" ).load( "php/parts/pet_breeds.php #cat > *" );
-        else $( "#breed" ).load( "php/parts/pet_breeds.php #dog > *" );
+        $.ajax({
+            type: 'POST',
+            url: 'php/parts/pet_breeds.php',
+            data: { breedTypeID: $(this).val() },
+            success: function(data) {
+                $('#breed').html(data);
+            }
+        });
     });
     const form = {
         messages: document.getElementById('message'),

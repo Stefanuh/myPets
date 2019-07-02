@@ -7,7 +7,7 @@
     margin: 0 0 15px;
   }
 
-  #dashboard > .container-fluid > .row > .card {
+  #dashboard > .container-fluid > .row > .card, #account > .container-fluid > .row > .card {
     width: 100% !important;
     margin: 0 15px 20px;
   }

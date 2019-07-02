@@ -1,6 +1,6 @@
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="<?php echo root ?>"><img alt="myPets" src="img/logo.svg">myPets</a>
+        <a class="navbar-brand" href="<?php echo root ?>"><img alt="myPets" src="<?php root ?>/img/logo.svg">myPets</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main_menu" aria-controls="main_menu" aria-expanded="false">
             <span class="navbar-toggler-icon"></span>
         </button>

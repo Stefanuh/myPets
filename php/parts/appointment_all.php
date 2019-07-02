@@ -60,7 +60,7 @@
         Verwijder afspraak
     </button>
     <button type="submit" name="submitAppointmentRequest" id="submitAppointmentRequest" class="btn btn-success">
-        Plan afspraak in
+        Wijzig
     </button>
 </div>
 <script>
@@ -78,7 +78,7 @@
         // Extra controle of de afspraak verwijdert moet worden
         const confirmDelete = confirm("Weet u zeker dat deze afspraak verwijdert moet worden?");
         const appointmentID = $(this).data('appointmentid');
-        let appointmentBtn = $('#appointmentRequestBtn-'+appointmentID);
+        let appointmentBtn = $('#appointmentAllBtn-'+appointmentID);
         if (confirmDelete) {
             $.ajax({
                 type: 'POST',
@@ -86,11 +86,11 @@
                 data: { appointmentID: appointmentID },
                 success: function() {
                     // Haalt een getal van de counter af
-                    const request_counter = $(".request_counter");
-                    let request_counter_val = parseInt(request_counter.text()) - 1;
-                    request_counter.html(request_counter_val);
+                    const all_counter = $(".all_counter");
+                    let all_counter_val = parseInt(all_counter.text()) - 1;
+                    all_counter.html(all_counter_val);
                     // Haalt de modal weg
-                    $('#appointmentRequest').modal('toggle');
+                    $('#appointmentAll').modal('toggle');
                     // Haalt de aanvraag knop weg
                     appointmentBtn.remove();
                 }

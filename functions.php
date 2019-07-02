@@ -104,6 +104,7 @@ class User {
     private $query;
     private $bind;
     private $phone;
+    private $email;
 
     public function __construct() {
         if (isset($_SESSION['userID'])) $this->userID = $_SESSION['userID'];
@@ -117,6 +118,7 @@ class User {
         $this->userData = $this->query->getQuery("SELECT firstName, lastName, email, phone, role FROM user WHERE userID = :userID", $this->bind);
         $this->firstName = $this->userData['firstName'];
         $this->lastName = $this->userData['lastName'];
+        $this->email = $this->userData['email'];
         $this->role = $this->userData['role'];
         $this->phone = $this->userData['phone'];
     }
@@ -141,6 +143,10 @@ class User {
     // Een functie die de volledige naam van de gebruiker terug geeft
     public function getFullName() {
         return $this->firstName." ".$this->lastName;
+    }
+
+    public function getEmail() {
+        return $this->email;
     }
 
     public function getRole() {
@@ -245,6 +251,11 @@ class Pet {
         return( $this->query->getQuery("SELECT bt.breedTypeID, b.breedID FROM `breed_type` bt
                                                 INNER JOIN breed b ON bt.breedTypeID = b.breedTypeID
                                                 WHERE breedID = :breedID", $bind));
+    }
+
+    // Geeft alle soorten huisdieren teru
+    function getBreedTypes() {
+        return( $this->query->getQuery("SELECT * FROM breed_type", 0, 1));
     }
 
     // Deze functie zoekt op een foto van de huisdier

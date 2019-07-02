@@ -18,8 +18,8 @@ $pet = new Pet($admin->getAppointmentRequest($appointmentID)['petID']);
 </div>
 <div class="form-group">
     <label for="name">Extra informatie</label>
-    <textarea id="appointmentView_description" class="form-control" aria-label="With textarea">
-        <?php echo $admin->getAppointment($appointmentID)['description'] ?></textarea>
+    <textarea id="appointmentView_description" class="form-control" aria-label="With textarea"><?php
+        echo $admin->getAppointment($appointmentID)['description'] ?></textarea>
 </div>
 <div class="form-group">
     <label for="appointmentView_treatment">Behandelingen:</label>
@@ -138,6 +138,7 @@ $pet = new Pet($admin->getAppointmentRequest($appointmentID)['petID']);
     });
 
     $('.removeAppointment').click(function() {
+        // Extra controle of de afspraak verwijdert moet worden
         const confirmDelete = confirm("Weet u zeker dat deze afspraak verwijdert moet worden?");
         const appointmentID = $(this).data('appointmentid');
         let appointmentBtn = $('#appointmentViewBtn-'+appointmentID);
@@ -147,6 +148,10 @@ $pet = new Pet($admin->getAppointmentRequest($appointmentID)['petID']);
                 url: 'php/remove_appointment.php',
                 data: { appointmentID: appointmentID },
                 success: function() {
+                    // Haalt een getal van de counter af
+                    const appointment_view_counter = $(".appointment_view_counter");
+                    let appointment_view_counter_val = parseInt(appointment_view_counter.text()) - 1;
+                    appointment_view_counter.html(appointment_view_counter_val);
                     $('#appointmentView').modal('toggle');
                     appointmentBtn.remove();
                 }
