@@ -58,7 +58,7 @@ $pet = new Pet($admin->getAppointmentRequest($appointmentID)['petID']);
     <button type="button" class="btn btn-danger removeAppointment" data-appointmentid="<?php echo $appointmentID ?>">
         Verwijder afspraak
     </button>
-    <button type="button" id="appointmentViewSubmit" class="btn btn-success">Opslaan</button>
+    <button type="button" id="appointmentViewSubmit" class="btn btn-success">Rond af</button>
 </div>
 <script>
     $(".datetimepicker").datetimepicker({
