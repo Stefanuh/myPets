@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 37.97.170.92
--- Gegenereerd op: 01 jul 2019 om 01:31
+-- Gegenereerd op: 03 jul 2019 om 01:09
 -- Serverversie: 10.1.40-MariaDB-1~stretch
 -- PHP-versie: 5.6.26
 
@@ -84,7 +84,8 @@ INSERT INTO `breed` (`breedID`, `breedTypeID`, `name`) VALUES
 (17, 2, 'Abessijn'),
 (18, 2, 'Bengaal'),
 (19, 2, 'Blauwe Rus'),
-(20, 2, 'Amerikaans korthaar');
+(20, 2, 'Amerikaans korthaar'),
+(21, 2, 'Heilige Birmaan');
 
 -- --------------------------------------------------------
 
@@ -126,7 +127,8 @@ INSERT INTO `menu` (`menuID`, `name`, `slug`, `secured`) VALUES
 (1, 'Log in', 'login', 0),
 (2, 'Account aanmaken', 'register', 0),
 (3, 'Overzicht', 'dashboard', 1),
-(4, 'Afspraken', 'appointment', 2);
+(4, 'Mijn account', 'account', 1),
+(5, 'Afspraken', 'appointment', 2);
 
 -- --------------------------------------------------------
 
@@ -197,8 +199,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`userID`, `firstName`, `lastName`, `email`, `password`, `phone`, `role`) VALUES
-(1, 'Admin', 'Medewerker', 'admin@mypets.nl', '$2y$12$.gHZELY24lRc.V5SKSvqme5fykD/uYOQji42gZ/srML45Oaat28nm', '', 1),
-(2, 'Test', 'Klant', 'klant@mypets.nl', '$2y$12$97oWJpRIoJBcWLJN802oRe03btOSNwOkL7KL6MSKQshVwcb6iEkhC', '', 0);
+(1, 'Admin', 'Medewerker', 'admin@mypets.nl', '$2y$12$.gHZELY24lRc.V5SKSvqme5fykD/uYOQji42gZ/srML45Oaat28nm', '0643493022', 1),
+(2, 'Klant', 'Gebruiker', 'klant@mypets.nl', '$2y$12$R2l6qnZtGWcanQdJ3JS0XuqePDH4fdz3nr5nlDChNJUd0Cg9gS7uO', '0643493022', 0);
 
 --
 -- Indexen voor geëxporteerde tabellen
@@ -271,19 +273,19 @@ ALTER TABLE `appointment`
 -- AUTO_INCREMENT voor een tabel `breed`
 --
 ALTER TABLE `breed`
-  MODIFY `breedID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `breedID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT voor een tabel `breed_type`
 --
 ALTER TABLE `breed_type`
-  MODIFY `breedTypeID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `breedTypeID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT voor een tabel `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `menuID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `menuID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT voor een tabel `pet`
@@ -301,7 +303,7 @@ ALTER TABLE `treatment`
 -- AUTO_INCREMENT voor een tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `userID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `userID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Beperkingen voor geëxporteerde tabellen
